@@ -14,16 +14,48 @@ class LoginVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setIcon(for: tfNameorID, withImage: UIImage(named: "user"))
-        setIcon(for: tfPassword, withImage: UIImage(named: "password"))
-        setIconButton(for: btnLoginn, withImage: UIImage(named: "login"), title: "Login")
-
+        // Set the color of the thumb and the background of the switch
+           switchBtnRememberme.onTintColor = UIColor(red: 139/255, green: 0, blue: 0, alpha: 1) // Red background color
+           switchBtnRememberme.thumbTintColor = .white // White thumb color
+            setIcon(for: tfNameorID, withImage: UIImage(named: "user"))
+            setIcon(for: tfPassword, withImage: UIImage(named: "password"))
+            setIconButton(for: btnLoginn, withImage: UIImage(named: "login"), title: "Login")
+            
         // Initial placeholder update
-        updatePlaceholder()
-        
-        // Add target for segmented control
-        segmentedControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
-    }
+           updatePlaceholder()
+           
+         
+        // Retrieve the selected segment index from UserDefaults and set it
+        if let savedSegmentIndex = UserDefaults.standard.value(forKey: "selectedSegmentIndex") as? Int {
+            segmentedControl.selectedSegmentIndex = savedSegmentIndex
+        }
+
+        // Pre-fill credentials based on the selected segment
+        let selectedIndex = segmentedControl.selectedSegmentIndex
+        switch selectedIndex {
+        case 0: // Doctor
+            if let savedEmail = UserDefaults.standard.string(forKey: "DR_Email"),
+               let savedPassword = UserDefaults.standard.string(forKey: "DR_Password") {
+                tfNameorID.text = savedEmail
+                tfPassword.text = savedPassword
+                switchBtnRememberme.isOn = true
+            }
+        case 1: // Patient
+            if let savedPatientEmail = UserDefaults.standard.string(forKey: "PT_Email"),
+               let savedPatientPassword = UserDefaults.standard.string(forKey: "PT_Password") {
+                tfNameorID.text = savedPatientEmail
+                tfPassword.text = savedPatientPassword
+                switchBtnRememberme.isOn = true
+            }
+        default:
+            break
+        }
+
+            
+            // Add target for segmented control
+            segmentedControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+        }
+
 
     // Action for the Login button
     @IBAction func btnLogin(_ sender: UIButton) {
@@ -42,54 +74,76 @@ class LoginVC: UIViewController {
         // Determine which login process to use based on the segmented control
         if segmentedControl.selectedSegmentIndex == 0 {
             // Doctor login
-            let loginData = DoctorLoginData(userName: nameORid, password: password, rememberMe: rememberMe)
+            let loginData = DoctorLoginData(email: nameORid, password: password, rememberMe: rememberMe)
             doctorViewModel.login(doctorLoginData: loginData) { result in
                 self.handleLoginResult(result)
             }
         } else {
             // Patient login
-            let loginData = PatientLoginData(nationalID: nameORid, password: password, rememberMe: rememberMe)
+            let loginData = PatientLoginData(email: nameORid, password: password, rememberMe: rememberMe)
             patientViewModel.login(patientLoginData: loginData) { result in
                 self.handleLoginResult(result)
             }
         }
     }
 
-    // Modified handleLoginResult function to handle both Doctor and Patient login responses
     private func handleLoginResult<T>(_ result: Result<T, Error>) {
         switch result {
         case .success(let response):
             if let doctorResponse = response as? DoctorLoginResponse {
                 print("Doctor login successful! Token: \(doctorResponse.token)")
-                UserDefaults.standard.set(doctorResponse.userName, forKey: "DR_UserName")
+                UserDefaults.standard.set(doctorResponse.email, forKey: "DREmail")
                 UserDefaults.standard.set(doctorResponse.id, forKey: "DR_ID")
                 print(doctorResponse.id)
 
+                // Save email and password if "Remember Me" is enabled for doctor
+                if switchBtnRememberme.isOn {
+                    UserDefaults.standard.set(doctorResponse.email, forKey: "DR_Email")
+                    UserDefaults.standard.set(tfPassword.text, forKey: "DR_Password") // Save the password
+                }
+
+                // Navigate to HomeVc
+                let homeVc = self.storyboard?.instantiateViewController(identifier: "drhomevc") as! DrHomeVC
+                homeVc.title = "DR Home"
+                self.navigationController?.pushViewController(homeVc, animated: true)
+
                 KeychainHelper.shared.saveToken(token: doctorResponse.token, forKey: "DR_Token")
+
             } else if let patientResponse = response as? PatientLoginResponse {
                 print("Patient login successful! Token: \(patientResponse.token)")
-                UserDefaults.standard.set(patientResponse.userName, forKey: "PT_UserName")
+                UserDefaults.standard.set(patientResponse.email, forKey: "PT_email")
                 KeychainHelper.shared.saveToken(token: patientResponse.token, forKey: "PT_Token")
                 UserDefaults.standard.set(patientResponse.id, forKey: "PT_ID")
+                print(patientResponse.id)
 
-                
+                // Save patient email and password if "Remember Me" is enabled
+                if switchBtnRememberme.isOn {
+                    UserDefaults.standard.set(patientResponse.email, forKey: "PT_Email")
+                    UserDefaults.standard.set(tfPassword.text, forKey: "PT_Password") // Save the password
+                }
+
+                // Navigate to HomeVc
+                let homeVc = self.storyboard?.instantiateViewController(identifier: "homevc") as! HomeVC
+                homeVc.title = "Patient Home"
+                self.navigationController?.pushViewController(homeVc, animated: true)
             }
-            
-            // Navigate to HomeVc
-            let homeVc = self.storyboard?.instantiateViewController(identifier: "homevc") as! HomeVC
-            homeVc.title = "Home"
-            self.navigationController?.pushViewController(homeVc, animated: true)
-
         case .failure(let error):
             showAlert(message: "Login failed: \(error.localizedDescription)")
         }
     }
 
 
+
     // Update placeholder text based on segmented control
+   
     @objc func segmentChanged() {
+        // Save the selected segment index
+        UserDefaults.standard.set(segmentedControl.selectedSegmentIndex, forKey: "selectedSegmentIndex")
+        
+        // Update the placeholder text based on selected segment
         updatePlaceholder()
     }
+
 
     func updatePlaceholder() {
         if segmentedControl.selectedSegmentIndex == 0 {

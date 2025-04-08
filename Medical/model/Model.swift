@@ -22,13 +22,13 @@ struct DoctorData: Codable {
 
 struct DoctorLoginData:Codable
 {
-    let userName,password: String
+    let email,password: String
     let rememberMe: Bool
 }
 struct DoctorLoginResponse: Codable {
     let token: String
     let expiration: String
-    let userName: String
+    let email: String
     let id: String
 }
 
@@ -59,13 +59,13 @@ struct PostPatientData{
 }
 //Patient Login
 struct PatientLoginData: Codable {
-    let nationalID, password: String
+    let email, password: String
     let rememberMe: Bool
 }
 struct PatientLoginResponse: Codable {
     let token: String
     let expiration: String
-    let nationalID:String
+    let email:String
     let userName: String
     let id: String
 }

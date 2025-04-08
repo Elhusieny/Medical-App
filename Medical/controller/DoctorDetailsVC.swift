@@ -68,7 +68,7 @@ class DoctorDetailsVC: UIViewController {
     
     
     private func fetchDoctorTimes() {
-        guard let token = KeychainHelper.shared.getToken(forKey: "PT_Token") else {
+        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
             print("No token available.")
             return
         }

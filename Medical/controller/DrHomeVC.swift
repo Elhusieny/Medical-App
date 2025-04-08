@@ -1,69 +1,71 @@
 import UIKit
 
-class HomeVC: UIViewController {
+import Foundation
+class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
     @IBOutlet weak var collectionView: UICollectionView!
-    let viewModel = GetAllDoctorsViewModel()
-    var collectionViewHandler: DoctorsCollectionViewHandler?
+    private let handler = DrHomeCollectionViewHandler()
+    //
+    //    @IBOutlet weak var btnAddNewPresiption: UIButton!
+    //    @IBOutlet weak var btnAllReservations: UIButton!
+    //    @IBOutlet weak var btnMyWorkingTimes: UIButton!
+    //    @IBOutlet weak var btnPresiptionHistory: UIButton!
+    let helperFunctions = HelperFunctions()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title="Home"
-        // Create a back button with SF Symbol and black tint
-        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
-        let backButton = UIButton(type: .system)
-        backButton.setImage(backImage, for: .normal)
-        backButton.setTitle(" Back", for: .normal)
-        backButton.tintColor = .black
-        backButton.setTitleColor(.black, for: .normal)
-     // 💪 Set bold system font
-         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
-
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
-        collectionViewHandler = DoctorsCollectionViewHandler(viewModel: viewModel)
-        collectionView.dataSource = collectionViewHandler
-        collectionView.delegate = collectionViewHandler
+        collectionView.dataSource = handler
+        collectionView.delegate = handler
+        handler.delegate = self
         
-        // Set up the closure to handle doctor selection
-        collectionViewHandler?.didSelectDoctor = { [weak self] selectedDoctor in
-            self?.performSegue(withIdentifier: "showDoctorDetails", sender: selectedDoctor)
+        // Set up the layout for two columns
+        if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
+            let numberOfColumns: CGFloat = 2
+            let padding: CGFloat = 10 // Adjust the padding as needed
+            let totalPadding = (numberOfColumns + 1) * padding
+            let itemWidth = (collectionView.frame.width - totalPadding) / numberOfColumns
+            
+            // Set the cell size to 150x150
+            layout.itemSize = CGSize(width: 150, height: 150) // Set width and height to 150
+            layout.minimumInteritemSpacing = padding
+            layout.minimumLineSpacing = padding
+            layout.sectionInset = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 30)
+            
         }
+        
+        //        helperFunctions.setIconButton(for: btnAddNewPresiption, withImage: UIImage(systemName: "pills.fill"), title: "Add New Prescription")
+        //        helperFunctions.setIconButton(for: btnAllReservations, withImage: UIImage(systemName: "calendar.badge.clock"), title: "All Reservations")
+        //        helperFunctions.setIconButton(for: btnMyWorkingTimes, withImage: UIImage(systemName: "clock.fill"), title: "My Working Times")
+        //        helperFunctions.setIconButton(for: btnPresiptionHistory, withImage: UIImage(systemName: "doc.text.fill"), title: "Prescription History")
+        
+        // Add the toolbar and menu button
         addToolbar()
-
-        fetchDoctors()
     }
-    @objc func backTapped() {
-        navigationController?.popViewController(animated: true)
-    }
-
     
-    func fetchDoctors() {
-        let token = KeychainHelper.shared.getToken(forKey: "DR_Token")
-        if let token = token {
-            viewModel.fetchDoctors(token: token) { success in
-                if success {
-                    DispatchQueue.main.async {
-                        self.collectionView.reloadData()
-                    }
-                } else {
-                    print("Failed to fetch doctors.")
-                }
-            }
-        } else {
-            print("No token available.")
+    func didSelectFunction(_ function: String) {
+        print("Tapped function: \(function)")
+        
+        switch function {
+        case "Add Prescription":
+            navigateToViewController(withIdentifier: "AddPrescriptionVC")
+        case "Reservations":
+            navigateToViewController(withIdentifier: "ReservationsVC")
+        case "Working Times":
+            navigateToViewController(withIdentifier: "drworkingtimes")
+        case "History":
+            navigateToViewController(withIdentifier: "PrescriptionHistoryVC")
+        default:
+            break
         }
     }
     
-    // Prepare for segue to DoctorDetailsVC
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "showDoctorDetails", let
-            doctorDetailsVC = segue.destination as? DoctorDetailsVC, let selectedDoctor = sender as? Doctors {
-            // Pass the selected doctor data to DoctorDetailsVC
-            doctorDetailsVC.doctor = selectedDoctor
-            print("Doc ID=\(selectedDoctor.id)")
+    private func navigateToViewController(withIdentifier identifier: String) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        if let vc = storyboard.instantiateViewController(withIdentifier: identifier) as? UIViewController {
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    
     // MARK: - Toolbar Setup
     private func addToolbar() {
         let toolbar = UIToolbar()
@@ -150,7 +152,7 @@ class HomeVC: UIViewController {
         //          self.navigationController?.pushViewController(homeVc, animated: true)
         
         let profileVC =
-        storyboard?.instantiateViewController(withIdentifier: "patientprofiledatavc") as! PatientProfileDataVC
+        storyboard?.instantiateViewController(withIdentifier: "drprofiledatavc") as! DrProfileDataVC
         self.navigationController?.pushViewController(profileVC, animated: true)
         
         

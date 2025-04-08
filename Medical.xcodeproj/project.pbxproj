@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4DD1C32E6B6783AC912655C7 /* Pods_Medical.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58C1F70081A13BEC1FA57E3B /* Pods_Medical.framework */; };
+		CA018F912DA3D5B5008A6ADC /* DrHomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA018F902DA3D5B5008A6ADC /* DrHomeVC.swift */; };
 		CA0AC6872C9C59EE00618587 /* PatientProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0AC6862C9C59ED00618587 /* PatientProfileVC.swift */; };
 		CA0AC6892C9C5A0700618587 /* PatientProfileDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0AC6882C9C5A0700618587 /* PatientProfileDataVC.swift */; };
 		CA0BC96B2C9079EA00909BAA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0BC96A2C9079EA00909BAA /* AppDelegate.swift */; };
@@ -30,6 +31,8 @@
 		CA3B85E32CA00A6000A1BF32 /* DrWorkingTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3B85E22CA00A6000A1BF32 /* DrWorkingTimes.swift */; };
 		CA3FD55B2C932E6100137533 /* DoctorsCollectionViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3FD55A2C932E6100137533 /* DoctorsCollectionViewHandler.swift */; };
 		CA5CE5EA2C9B16BF00668634 /* DrProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CE5E92C9B16BF00668634 /* DrProfileVC.swift */; };
+		CA7643082DA3E6F100578CE0 /* DrHomeViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7643072DA3E6F100578CE0 /* DrHomeViewHandler.swift */; };
+		CA76430A2DA3E70200578CE0 /* DrHomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7643092DA3E70200578CE0 /* DrHomeCell.swift */; };
 		CA81D2C12CAD6F33004B97A4 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = CA81D2C02CAD6F33004B97A4 /* FirebaseAnalytics */; };
 		CA81D2C32CAD6F33004B97A4 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = CA81D2C22CAD6F33004B97A4 /* FirebaseAnalyticsWithoutAdIdSupport */; };
 		CA9219A22C91C1FE00C6BB6A /* KeyChainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA9219A12C91C1FE00C6BB6A /* KeyChainHelper.swift */; };
@@ -48,6 +51,7 @@
 		06BD9BBFD172183BC883CF25 /* Pods-Medical.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Medical.release.xcconfig"; path = "Target Support Files/Pods-Medical/Pods-Medical.release.xcconfig"; sourceTree = "<group>"; };
 		1D5E1C55F7BADF372DFDF67C /* Pods-Medical.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Medical.debug.xcconfig"; path = "Target Support Files/Pods-Medical/Pods-Medical.debug.xcconfig"; sourceTree = "<group>"; };
 		58C1F70081A13BEC1FA57E3B /* Pods_Medical.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Medical.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA018F902DA3D5B5008A6ADC /* DrHomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrHomeVC.swift; sourceTree = "<group>"; };
 		CA0AC6862C9C59ED00618587 /* PatientProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientProfileVC.swift; sourceTree = "<group>"; };
 		CA0AC6882C9C5A0700618587 /* PatientProfileDataVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientProfileDataVC.swift; sourceTree = "<group>"; };
 		CA0BC9672C9079EA00909BAA /* Medical.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Medical.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -72,6 +76,8 @@
 		CA3B85E22CA00A6000A1BF32 /* DrWorkingTimes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrWorkingTimes.swift; sourceTree = "<group>"; };
 		CA3FD55A2C932E6100137533 /* DoctorsCollectionViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorsCollectionViewHandler.swift; sourceTree = "<group>"; };
 		CA5CE5E92C9B16BF00668634 /* DrProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrProfileVC.swift; sourceTree = "<group>"; };
+		CA7643072DA3E6F100578CE0 /* DrHomeViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrHomeViewHandler.swift; sourceTree = "<group>"; };
+		CA7643092DA3E70200578CE0 /* DrHomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrHomeCell.swift; sourceTree = "<group>"; };
 		CA9219A12C91C1FE00C6BB6A /* KeyChainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyChainHelper.swift; sourceTree = "<group>"; };
 		CAA472612C92FD390034B1A9 /* DoctorsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorsCollectionViewCell.swift; sourceTree = "<group>"; };
 		CAD33FB22C9B98CF003BD190 /* DoctorDetailsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorDetailsVC.swift; sourceTree = "<group>"; };
@@ -163,6 +169,7 @@
 				CA393F6B2C99838A00CA826A /* PatientDataVC.swift */,
 				CAD33FB22C9B98CF003BD190 /* DoctorDetailsVC.swift */,
 				CA3B85E22CA00A6000A1BF32 /* DrWorkingTimes.swift */,
+				CA018F902DA3D5B5008A6ADC /* DrHomeVC.swift */,
 			);
 			path = controller;
 			sourceTree = "<group>";
@@ -223,6 +230,7 @@
 		CA3FD55C2C932F7100137533 /* collectionView */ = {
 			isa = PBXGroup;
 			children = (
+				CA7643062DA3E6AA00578CE0 /* DrHomeClasses */,
 				CAE3863D2CA867C90033A43B /* bookingCvManager */,
 				CA393F642C996C7600CA826A /* patientsCVclasses */,
 				CA3FD55D2C932F8300137533 /* drsCvClasses */,
@@ -248,6 +256,15 @@
 				CA0AC6882C9C5A0700618587 /* PatientProfileDataVC.swift */,
 			);
 			path = profile;
+			sourceTree = "<group>";
+		};
+		CA7643062DA3E6AA00578CE0 /* DrHomeClasses */ = {
+			isa = PBXGroup;
+			children = (
+				CA7643072DA3E6F100578CE0 /* DrHomeViewHandler.swift */,
+				CA7643092DA3E70200578CE0 /* DrHomeCell.swift */,
+			);
+			path = DrHomeClasses;
 			sourceTree = "<group>";
 		};
 		CAE3863D2CA867C90033A43B /* bookingCvManager */ = {
@@ -389,6 +406,7 @@
 				CAE3863F2CA8682A0033A43B /* DateCollectionViewManager.swift in Sources */,
 				CA393F682C996D3800CA826A /* PatientsCollectionViewCell.swift in Sources */,
 				CA393F6A2C996DCE00CA826A /* PatientsVC.swift in Sources */,
+				CA76430A2DA3E70200578CE0 /* DrHomeCell.swift in Sources */,
 				CAD33FB32C9B98CF003BD190 /* DoctorDetailsVC.swift in Sources */,
 				CA0BC98F2C907F2800909BAA /* Model.swift in Sources */,
 				CA9219A22C91C1FE00C6BB6A /* KeyChainHelper.swift in Sources */,
@@ -406,7 +424,9 @@
 				CA0AC6892C9C5A0700618587 /* PatientProfileDataVC.swift in Sources */,
 				CAE386452CA869450033A43B /* TimeCollectionViewCell.swift in Sources */,
 				CAEEB2FE2DA2710F00DA4436 /* HelperFunctions.swift in Sources */,
+				CA018F912DA3D5B5008A6ADC /* DrHomeVC.swift in Sources */,
 				CA0BC96D2C9079EA00909BAA /* SceneDelegate.swift in Sources */,
+				CA7643082DA3E6F100578CE0 /* DrHomeViewHandler.swift in Sources */,
 				CA0BC9832C907B6B00909BAA /* RegisterVC.swift in Sources */,
 				CA0AC6872C9C59EE00618587 /* PatientProfileVC.swift in Sources */,
 				CA0BC98D2C907ED000909BAA /* Utilities.swift in Sources */,
@@ -549,9 +569,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9NDJC2HJ88;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S43G3TT63L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Medical/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -568,6 +591,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = a1flothers.com.Medical;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MEDICAL-PROVISIONING PROFILE";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -580,9 +605,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 9NDJC2HJ88;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S43G3TT63L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Medical/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -599,6 +627,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = a1flothers.com.Medical;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MEDICAL-PROVISIONING PROFILE";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

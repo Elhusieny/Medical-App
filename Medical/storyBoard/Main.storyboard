@@ -65,7 +65,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JGu-hE-sN9">
-                                <rect key="frame" x="5" y="598.33333333333337" width="383" height="88.333333333333371"/>
+                                <rect key="frame" x="5" y="588.33333333333337" width="383" height="98.333333333333371"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S1d-61-DGC">
                                         <rect key="frame" x="192.33333333333337" y="0.0" width="180.66666666666663" height="38"/>
@@ -76,9 +76,9 @@
                                         </buttonConfiguration>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YwN-X9-FER">
-                                        <rect key="frame" x="15" y="50.333333333333258" width="353" height="35"/>
+                                        <rect key="frame" x="15" y="50.333333333333258" width="353" height="45"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="35" id="F5g-Mg-Wo3"/>
+                                            <constraint firstAttribute="height" constant="45" id="F5g-Mg-Wo3"/>
                                         </constraints>
                                         <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <state key="normal" title="Button"/>
@@ -142,6 +142,9 @@
                                     <segment title="Patient"/>
                                 </segments>
                             </segmentedControl>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="alroshetalogo" translatesAutoresizingMaskIntoConstraints="NO" id="DWN-4c-XOk">
+                                <rect key="frame" x="8" y="113" width="377" height="259"/>
+                            </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -150,10 +153,14 @@
                             <constraint firstItem="m5c-gh-sTc" firstAttribute="top" secondItem="fIx-gX-OuS" secondAttribute="bottom" constant="35" id="D5A-Kj-NxW"/>
                             <constraint firstItem="m5c-gh-sTc" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="DX8-0M-24e"/>
                             <constraint firstItem="fIx-gX-OuS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="60" id="ECB-fi-1VY"/>
+                            <constraint firstItem="DWN-4c-XOk" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="MXk-mW-eso"/>
+                            <constraint firstItem="fIx-gX-OuS" firstAttribute="top" secondItem="DWN-4c-XOk" secondAttribute="bottom" constant="20" id="O3T-8k-9rb"/>
                             <constraint firstItem="JGu-hE-sN9" firstAttribute="leading" secondItem="m5c-gh-sTc" secondAttribute="leading" id="ZCX-t8-JLE"/>
                             <constraint firstItem="GBx-tk-ugF" firstAttribute="top" secondItem="JGu-hE-sN9" secondAttribute="bottom" constant="30" id="fe6-PY-Wa1"/>
                             <constraint firstItem="JGu-hE-sN9" firstAttribute="trailing" secondItem="m5c-gh-sTc" secondAttribute="trailing" id="iV0-CB-O8Z"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="DWN-4c-XOk" secondAttribute="trailing" constant="8" id="iYx-Cz-KEO"/>
                             <constraint firstItem="GBx-tk-ugF" firstAttribute="leading" secondItem="JGu-hE-sN9" secondAttribute="leading" id="nkO-fq-z4j"/>
+                            <constraint firstItem="DWN-4c-XOk" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="t6C-1N-WAj"/>
                             <constraint firstItem="GBx-tk-ugF" firstAttribute="trailing" secondItem="JGu-hE-sN9" secondAttribute="trailing" id="vJs-pY-AEA"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="fIx-gX-OuS" secondAttribute="trailing" constant="60" id="vs6-Nh-dkc"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="GBx-tk-ugF" secondAttribute="bottom" constant="19.329999999999998" id="yJN-an-wLl"/>
@@ -408,28 +415,18 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="category" translatesAutoresizingMaskIntoConstraints="NO" id="Ac7-8N-VUB">
                                 <rect key="frame" x="10" y="117" width="373" height="310"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dto-TH-tnk">
-                                <rect key="frame" x="53" y="750" width="86" height="34.333333333333371"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Patients"/>
-                                <connections>
-                                    <segue destination="RRb-lM-9do" kind="show" id="e2R-sm-5fT"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Top Doctors" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vNw-qz-zn7">
                                 <rect key="frame" x="20" y="465" width="114" height="24"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SfL-Zk-H88">
-                                <rect key="frame" x="247" y="768" width="65.333333333333343" height="31"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dto-TH-tnk">
+                                <rect key="frame" x="53" y="783.66666666666663" width="86" height="34.333333333333371"/>
                                 <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Profile">
-                                    <fontDescription key="titleFontDescription" type="system" pointSize="14"/>
-                                </buttonConfiguration>
+                                <buttonConfiguration key="configuration" style="plain" title="Patients"/>
                                 <connections>
-                                    <segue destination="gJk-iq-ZOZ" kind="show" id="icf-DY-Oqx"/>
+                                    <segue destination="RRb-lM-9do" kind="show" id="e2R-sm-5fT"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -437,9 +434,8 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="XWo-Q8-HlJ" firstAttribute="top" secondItem="ThJ-IG-rUM" secondAttribute="top" constant="1" id="2Vr-4w-fuW"/>
+                            <constraint firstItem="ThJ-IG-rUM" firstAttribute="bottom" secondItem="Dto-TH-tnk" secondAttribute="bottom" id="4QE-Xm-PhE"/>
                             <constraint firstItem="Dto-TH-tnk" firstAttribute="leading" secondItem="ThJ-IG-rUM" secondAttribute="leading" constant="53" id="CCO-6I-ZtU"/>
-                            <constraint firstItem="Dto-TH-tnk" firstAttribute="top" secondItem="7Gs-Lf-vT8" secondAttribute="bottom" constant="37" id="OF1-cQ-7UL"/>
-                            <constraint firstItem="ThJ-IG-rUM" firstAttribute="bottom" secondItem="Dto-TH-tnk" secondAttribute="bottom" constant="33.670000000000002" id="SnI-q0-W4D"/>
                             <constraint firstItem="XWo-Q8-HlJ" firstAttribute="leading" secondItem="ThJ-IG-rUM" secondAttribute="leading" constant="16" id="Tj3-sH-wRi"/>
                             <constraint firstAttribute="trailing" secondItem="Ac7-8N-VUB" secondAttribute="trailing" constant="10" id="Vlc-gq-rpY"/>
                             <constraint firstItem="ThJ-IG-rUM" firstAttribute="trailing" secondItem="7Gs-Lf-vT8" secondAttribute="trailing" constant="18" id="YgN-8v-DTz"/>
@@ -449,8 +445,7 @@
                             <constraint firstItem="vNw-qz-zn7" firstAttribute="leading" secondItem="ThJ-IG-rUM" secondAttribute="leading" constant="20" id="gYp-s0-8Jy"/>
                             <constraint firstItem="7Gs-Lf-vT8" firstAttribute="leading" secondItem="ThJ-IG-rUM" secondAttribute="leading" constant="18" id="gvk-BZ-Lnq"/>
                             <constraint firstItem="ThJ-IG-rUM" firstAttribute="trailing" secondItem="XWo-Q8-HlJ" secondAttribute="trailing" constant="16" id="h3Y-Zf-nFs"/>
-                            <constraint firstItem="ThJ-IG-rUM" firstAttribute="trailing" secondItem="SfL-Zk-H88" secondAttribute="trailing" constant="78" id="nED-em-qJv"/>
-                            <constraint firstItem="ThJ-IG-rUM" firstAttribute="bottom" secondItem="SfL-Zk-H88" secondAttribute="bottom" constant="34" id="rVG-SO-See"/>
+                            <constraint firstItem="Dto-TH-tnk" firstAttribute="top" secondItem="7Gs-Lf-vT8" secondAttribute="bottom" constant="70.670000000000002" id="pXv-D1-z8a"/>
                             <constraint firstItem="Ac7-8N-VUB" firstAttribute="top" secondItem="XWo-Q8-HlJ" secondAttribute="bottom" constant="1" id="sRS-Hp-765"/>
                         </constraints>
                     </view>
@@ -926,7 +921,7 @@
             <objects>
                 <viewController storyboardIdentifier="drprofilevc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="gJk-iq-ZOZ" customClass="DoctorProfileVC" customModule="Medical" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="s3S-wL-eCU">
-                        <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="doctor1" translatesAutoresizingMaskIntoConstraints="NO" id="hME-YY-CBU">
@@ -937,7 +932,7 @@
                                 </constraints>
                             </imageView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ERF-WN-dFd">
-                                <rect key="frame" x="0.0" y="338" width="393" height="445"/>
+                                <rect key="frame" x="0.0" y="338" width="393" height="480"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Personal Information" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Oix-3j-MxY">
                                         <rect key="frame" x="15" y="8" width="363" height="30"/>
@@ -1171,102 +1166,137 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="3Kc-1C-YLC">
-                                <rect key="frame" x="5" y="89.000000000000014" width="383" height="226.33333333333337"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2vY-lv-Ble">
-                                        <rect key="frame" x="0.0" y="0.0" width="383" height="20.333333333333332"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Monday">
-                                            <directionalEdgeInsets key="contentInsets" top="0.0" leading="0.0" bottom="0.0" trailing="0.0"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="xjg-mk-eEh"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jJj-kC-VUF">
-                                        <rect key="frame" x="0.0" y="20.333333333333332" width="383" height="34.333333333333343"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Tuesday"/>
-                                        <connections>
-                                            <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="6tP-xk-Ocm"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="2" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ilL-a7-2yM">
-                                        <rect key="frame" x="0.0" y="54.666666666666657" width="383" height="34.333333333333343"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Wednesday"/>
-                                        <connections>
-                                            <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="RCz-8H-hdX"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="3" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQP-4t-u0f">
-                                        <rect key="frame" x="0.0" y="89" width="383" height="34.333333333333343"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Thuresday"/>
-                                        <connections>
-                                            <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="iYZ-0j-YaE"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="4" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="78A-Hp-wud">
-                                        <rect key="frame" x="0.0" y="123.33333333333333" width="383" height="34.333333333333329"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Friday"/>
-                                        <connections>
-                                            <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="KqY-yX-TPW"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PyM-8F-LeM">
-                                        <rect key="frame" x="0.0" y="157.66666666666666" width="383" height="34.333333333333343"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Saturday"/>
-                                        <connections>
-                                            <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="A6g-xT-7KR"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fUn-GI-h5U">
-                                        <rect key="frame" x="0.0" y="192" width="383" height="34.333333333333343"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Sunday"/>
-                                        <connections>
-                                            <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="y3L-sm-6k7"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                            </stackView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kw9-ec-5hx">
-                                <rect key="frame" x="119" y="442.33333333333331" width="155" height="34.333333333333314"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="Show Schedule"/>
-                                <connections>
-                                    <action selector="showSchedule" destination="d1a-vz-8Iu" eventType="touchUpInside" id="8iq-5a-HZb"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="UAM-d7-dCE">
-                                <rect key="frame" x="5" y="374" width="383" height="34.333333333333314"/>
+                                <rect key="frame" x="5" y="678" width="383" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="vrg-w9-YnM"/>
+                                </constraints>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="submitWorkingTimes"/>
                                 <connections>
                                     <action selector="submitWorkingTimes" destination="d1a-vz-8Iu" eventType="touchUpInside" id="DF9-QO-JCe"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ucy-bQ-GF7">
+                                <rect key="frame" x="5" y="440" width="383" height="148"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="3Kc-1C-YLC">
+                                        <rect key="frame" x="0.0" y="0.0" width="383" height="70"/>
+                                        <subviews>
+                                            <button opaque="NO" tag="5" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PyM-8F-LeM">
+                                                <rect key="frame" x="0.0" y="0.0" width="92.666666666666671" height="70"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="70" id="3Zh-ee-uHR"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Sat"/>
+                                                <connections>
+                                                    <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="A6g-xT-7KR"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="6" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fUn-GI-h5U">
+                                                <rect key="frame" x="96.666666666666686" y="0.0" width="93" height="70"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Sun"/>
+                                                <connections>
+                                                    <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="y3L-sm-6k7"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2vY-lv-Ble">
+                                                <rect key="frame" x="193.66666666666666" y="0.0" width="92.666666666666657" height="70"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Mon">
+                                                    <directionalEdgeInsets key="contentInsets" top="0.0" leading="0.0" bottom="0.0" trailing="0.0"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="xjg-mk-eEh"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="1" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jJj-kC-VUF">
+                                                <rect key="frame" x="290.33333333333331" y="0.0" width="92.666666666666686" height="70"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Tue"/>
+                                                <connections>
+                                                    <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="6tP-xk-Ocm"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="I9U-xr-vKe">
+                                        <rect key="frame" x="0.0" y="78" width="383" height="70"/>
+                                        <subviews>
+                                            <button opaque="NO" tag="2" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ilL-a7-2yM">
+                                                <rect key="frame" x="0.0" y="0.0" width="125" height="70"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="70" id="0P0-4h-1DO"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Wed"/>
+                                                <connections>
+                                                    <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="RCz-8H-hdX"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="3" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RQP-4t-u0f">
+                                                <rect key="frame" x="129" y="0.0" width="125" height="70"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Thu"/>
+                                                <connections>
+                                                    <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="iYZ-0j-YaE"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" tag="4" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="78A-Hp-wud">
+                                                <rect key="frame" x="258" y="0.0" width="125" height="70"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Fri"/>
+                                                <connections>
+                                                    <action selector="toggleDaySelection:" destination="d1a-vz-8Iu" eventType="touchUpInside" id="KqY-yX-TPW"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                            </stackView>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="WorkintTimes" translatesAutoresizingMaskIntoConstraints="NO" id="wZV-HP-KbI">
+                                <rect key="frame" x="2" y="109" width="389" height="245"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="245" id="JoS-zu-LBf"/>
+                                    <constraint firstAttribute="width" constant="389" id="gtW-Ek-gaC"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kw9-ec-5hx">
+                                <rect key="frame" x="119" y="620" width="155" height="50"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="m8x-Qw-0e0"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Show Schedule"/>
+                                <connections>
+                                    <action selector="showSchedule" destination="d1a-vz-8Iu" eventType="touchUpInside" id="8iq-5a-HZb"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="LGi-SI-XIm"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
+                            <constraint firstItem="ucy-bQ-GF7" firstAttribute="top" secondItem="wZV-HP-KbI" secondAttribute="bottom" constant="86" id="5QV-uz-CnA"/>
                             <constraint firstItem="UAM-d7-dCE" firstAttribute="leading" secondItem="LGi-SI-XIm" secondAttribute="leading" constant="5" id="5cN-s9-jZz"/>
-                            <constraint firstItem="3Kc-1C-YLC" firstAttribute="top" secondItem="Qik-Rs-nX5" secondAttribute="topMargin" constant="30" id="DsO-G3-RkT"/>
-                            <constraint firstItem="kw9-ec-5hx" firstAttribute="top" secondItem="UAM-d7-dCE" secondAttribute="bottom" constant="34" id="J2T-gr-VHg"/>
-                            <constraint firstItem="LGi-SI-XIm" firstAttribute="trailing" secondItem="3Kc-1C-YLC" secondAttribute="trailing" constant="5" id="LJU-a2-jfM"/>
                             <constraint firstItem="LGi-SI-XIm" firstAttribute="trailing" secondItem="kw9-ec-5hx" secondAttribute="trailing" constant="119" id="RBB-wu-uxL"/>
-                            <constraint firstItem="UAM-d7-dCE" firstAttribute="top" secondItem="fUn-GI-h5U" secondAttribute="bottom" constant="58.666666666666629" id="asp-wr-62v"/>
-                            <constraint firstItem="3Kc-1C-YLC" firstAttribute="leading" secondItem="LGi-SI-XIm" secondAttribute="leading" constant="5" id="jKz-Tl-4eK"/>
+                            <constraint firstItem="LGi-SI-XIm" firstAttribute="trailing" secondItem="wZV-HP-KbI" secondAttribute="trailing" constant="2" id="gRX-Tl-cGT"/>
+                            <constraint firstItem="kw9-ec-5hx" firstAttribute="top" secondItem="ucy-bQ-GF7" secondAttribute="bottom" constant="32" id="he8-Kk-lge"/>
                             <constraint firstItem="kw9-ec-5hx" firstAttribute="leading" secondItem="LGi-SI-XIm" secondAttribute="leading" constant="119" id="lE1-bx-zPE"/>
+                            <constraint firstItem="wZV-HP-KbI" firstAttribute="leading" secondItem="LGi-SI-XIm" secondAttribute="leading" constant="2" id="lKw-RW-yk4"/>
+                            <constraint firstItem="LGi-SI-XIm" firstAttribute="bottom" secondItem="UAM-d7-dCE" secondAttribute="bottom" constant="55" id="nqj-Ca-ikw"/>
+                            <constraint firstAttribute="trailing" secondItem="ucy-bQ-GF7" secondAttribute="trailing" constant="5" id="p67-fU-Iky"/>
                             <constraint firstItem="LGi-SI-XIm" firstAttribute="trailing" secondItem="UAM-d7-dCE" secondAttribute="trailing" constant="5" id="qEN-aM-dpg"/>
+                            <constraint firstItem="wZV-HP-KbI" firstAttribute="top" secondItem="LGi-SI-XIm" secondAttribute="top" constant="50" id="sfn-73-lLr"/>
+                            <constraint firstItem="UAM-d7-dCE" firstAttribute="top" secondItem="kw9-ec-5hx" secondAttribute="bottom" constant="8" symbolic="YES" id="taM-nx-afZ"/>
+                            <constraint firstItem="ucy-bQ-GF7" firstAttribute="leading" secondItem="LGi-SI-XIm" secondAttribute="leading" constant="5" id="xYf-YT-NdT"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Bg9-tS-KWf"/>
                     <connections>
+                        <outlet property="btnShowSchedule" destination="kw9-ec-5hx" id="Rqu-UK-QXS"/>
+                        <outlet property="btnSubmitWorkintTimes" destination="UAM-d7-dCE" id="zEd-uT-bfp"/>
                         <outlet property="fridayButton" destination="78A-Hp-wud" id="Tzk-6D-UUT"/>
                         <outlet property="mondayButton" destination="2vY-lv-Ble" id="dE7-Ib-7iF"/>
                         <outlet property="saturdayButton" destination="PyM-8F-LeM" id="0fj-Ex-U3P"/>
@@ -1313,8 +1343,76 @@
             </objects>
             <point key="canvasLocation" x="4755" y="-859"/>
         </scene>
+        <!--Dr HomeVC-->
+        <scene sceneID="kxI-np-xNg">
+            <objects>
+                <viewController storyboardIdentifier="drhomevc" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Tdd-SC-bqL" customClass="DrHomeVC" customModule="Medical" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="dnG-wj-Cpj">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gtI-IP-irY">
+                                <rect key="frame" x="5" y="380" width="383" height="388"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ZLy-80-jYA">
+                                    <size key="itemSize" width="128" height="200"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FunctionCell" id="R8l-kL-6HQ" customClass="DrHomeCollectionViewCell" customModule="Medical" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="BeU-R1-22Q">
+                                            <rect key="frame" x="0.0" y="0.0" width="150" height="150"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Abz-2m-ITH">
+                                                    <rect key="frame" x="5" y="68" width="50" height="50"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="50" id="djf-C9-azN"/>
+                                                        <constraint firstAttribute="height" constant="50" id="pG5-Pu-Qrs"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cwJ-7t-4nG">
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="150" height="150"/>
+                                        <connections>
+                                            <outlet property="iconImageView" destination="Abz-2m-ITH" id="Cwb-ib-wxc"/>
+                                            <outlet property="titleLabel" destination="cwJ-7t-4nG" id="qtR-la-zUQ"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="2k4-Nl-lMP"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="2k4-Nl-lMP" firstAttribute="trailing" secondItem="gtI-IP-irY" secondAttribute="trailing" constant="5" id="3PX-Ue-mGn"/>
+                            <constraint firstItem="gtI-IP-irY" firstAttribute="leading" secondItem="2k4-Nl-lMP" secondAttribute="leading" constant="5" id="FDL-rS-Rhw"/>
+                            <constraint firstItem="2k4-Nl-lMP" firstAttribute="bottom" secondItem="gtI-IP-irY" secondAttribute="bottom" constant="50" id="I6Y-Qr-7Kx"/>
+                            <constraint firstItem="gtI-IP-irY" firstAttribute="top" secondItem="2k4-Nl-lMP" secondAttribute="top" constant="321" id="eqc-hg-7AT"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="gtI-IP-irY" id="9rK-21-OGs"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uno-t5-gin" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="475.57251908396944" y="-63.380281690140848"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="WorkintTimes" width="204" height="136"/>
+        <image name="alroshetalogo" width="60" height="60"/>
         <image name="category" width="430" height="310"/>
         <image name="doc2" width="113" height="113"/>
         <image name="doctor1" width="71" height="71"/>

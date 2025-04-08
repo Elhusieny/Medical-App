@@ -42,5 +42,21 @@ class HelperFunctions{
         button.layer.cornerRadius = 20
         button.translatesAutoresizingMaskIntoConstraints = false
     }
+    func setIconButton2(for button: UIButton, withImage image: UIImage?, title: String) {
+        guard let image = image else { return }
+
+        let resizedImage = image.resized(to: CGSize(width: 20, height: 20)).withRenderingMode(.alwaysTemplate)
+
+        var configuration = UIButton.Configuration.plain()
+        configuration.image = resizedImage
+        configuration.imagePlacement = .leading
+        configuration.imagePadding = 8
+        configuration.title = title
+
+        button.configuration = configuration
+        button.tintColor = .white
+    }
+    
+
 
 }
