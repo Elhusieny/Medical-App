@@ -30,7 +30,23 @@ struct DoctorLoginResponse: Codable {
     let expiration: String
     let email: String
     let id: String
+    let userName:String
 }
+
+struct UpdateDoctorProfileRequest: Codable {
+    var id: String
+    var userName: String
+    var specialization: String
+    var email: String
+    var phone: String
+    var address: String
+    var password: String
+    var confirmPassword: String
+    var medicineDescriptions: String?  // Optional
+    var doctorWorkingTime: String?     // Optional
+    var doctorWorkingDaysOfWeek: String?  // Optional
+}
+
 
 //get all doctors
 struct Doctors:Codable
@@ -99,3 +115,38 @@ struct BookDate: Codable {
     let patientId: String
     let doctorTimeIntervalId: Int
 }
+
+
+struct PatientProfile: Codable {
+    var id: String
+    var nationalID: String
+    var patientCode: Int
+    var userName: String
+    var email: String
+    var phone: String
+    var address: String
+    var chronicDiseases: String?
+    var previousOperations: String?
+    var allergies: String?
+    var currentMedications: String?
+    var comments: String?
+    var password: String?  // Add password as an optional field
+}
+
+struct UpdatePatientProfileRequest: Codable {
+    var id: String
+    var nationalID: String
+    var patientCode: Int
+    var userName: String
+    var email: String
+    var phone: String
+    var address: String
+    var chronicDiseases: String?
+    var previousOperations: String?
+    var allergies: String?
+    var currentMedications: String?
+    var comments: String?
+    var password: String
+    var ConfirmPassword: String
+}
+

@@ -64,6 +64,8 @@ class DoctorDataViewModel {
     // Observable properties
     var doctor: DoctorData?
     var error: String?
+    var putProfile: UpdateDoctorProfileRequest?
+
 
     func fetchDoctorData(token: String, completion: @escaping () -> Void) {
         GetDoctorDataService.shared.fetchDoctorData(token: token) { result in
@@ -81,6 +83,16 @@ class DoctorDataViewModel {
             completion()
         }
     }
+
+    func updateDoctorProfile(token: String, completion: @escaping (String?) -> Void) {
+        guard let putProfile = putProfile else {
+            completion("No profile data to update")
+            return
+        }
+        
+        GetDoctorDataService.shared.updateDoctorProfile(token: token, updatedDoctor: putProfile, completion: completion)
+    }
+
 }
 
 class PatientRegisterViewModel {
@@ -194,4 +206,40 @@ class BookingViewModel {
         }
     }
 }
+//handle logic between api and view
+class PatientProfileViewModel {
+    var profile: PatientProfile?
+    
+    var putProfile:UpdatePatientProfileRequest?
+    func fetchProfile(id: String, token: String, completion: @escaping (String?) -> Void) {
+        DataServices.shared.getPatientProfile(id: id, token: token) { result in
+            switch result {
+            case .success(let data):
+                self.profile = data
+                completion(nil)
+            case .failure(let error):
+                completion("Failed to fetch profile: \(error.localizedDescription)")
+            }
+        }
+    }
+}
+import Alamofire
 
+extension PatientProfileViewModel {
+    func updateProfile(token: String, completion: @escaping (String?) -> Void) {
+        guard let updatedProfile = putProfile else {
+            completion("No profile data to update.")
+            return
+        }
+
+        // Make the update request through DataServices
+        DataServices.shared.updatePatientProfile(id: updatedProfile.id, updatedProfile: updatedProfile, token: token) { result in
+            switch result {
+            case .success:
+                completion(nil) // Success
+            case .failure(let error):
+                completion("Failed to update profile: \(error.localizedDescription)")
+            }
+        }
+    }
+}

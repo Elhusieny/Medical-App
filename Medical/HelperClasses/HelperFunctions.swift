@@ -56,7 +56,29 @@ class HelperFunctions{
         button.configuration = configuration
         button.tintColor = .white
     }
-    
+    func styleTextField(_ textField: UITextField, placeholder: String, icon: UIImage? = nil) {
+        textField.placeholder = placeholder
+        textField.borderStyle = .none
+        textField.backgroundColor = UIColor.systemGray6
+        textField.layer.cornerRadius = 10
+        textField.layer.masksToBounds = true
+        textField.setLeftPaddingPoints(12)
+        textField.font = UIFont.systemFont(ofSize: 16)
+        
+        if let icon = icon {
+            let iconView = UIImageView(image: icon)
+            iconView.tintColor = .gray
+            iconView.contentMode = .scaleAspectFit
+            iconView.frame = CGRect(x: 0, y: 0, width: 30, height: 20)
+
+            let containerView = UIView(frame: CGRect(x: 0, y: 0, width: 40, height: 20))
+            containerView.addSubview(iconView)
+            iconView.center = containerView.center
+
+            textField.leftView = containerView
+            textField.leftViewMode = .always
+        }
+    }
 
 
 }

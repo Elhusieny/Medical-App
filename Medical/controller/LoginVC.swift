@@ -7,7 +7,7 @@ class LoginVC: UIViewController {
     @IBOutlet weak var switchBtnRememberme: UISwitch!
     @IBOutlet weak var btnLoginn: UIButton!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
-
+    let helperFunctions=HelperFunctions()
     // ViewModel instances
     private let doctorViewModel = DoctorLoginViewModel()
     private let patientViewModel = PatientLoginViewModel()
@@ -17,8 +17,9 @@ class LoginVC: UIViewController {
         // Set the color of the thumb and the background of the switch
            switchBtnRememberme.onTintColor = UIColor(red: 139/255, green: 0, blue: 0, alpha: 1) // Red background color
            switchBtnRememberme.thumbTintColor = .white // White thumb color
-            setIcon(for: tfNameorID, withImage: UIImage(named: "user"))
-            setIcon(for: tfPassword, withImage: UIImage(named: "password"))
+        helperFunctions.styleTextField(tfNameorID, placeholder: "Name or ID", icon: UIImage(named: "user"))
+        helperFunctions.styleTextField(tfPassword, placeholder: "Password", icon: UIImage(named: "password"))
+
             setIconButton(for: btnLoginn, withImage: UIImage(named: "login"), title: "Login")
             
         // Initial placeholder update
@@ -60,7 +61,7 @@ class LoginVC: UIViewController {
     // Action for the Login button
     @IBAction func btnLogin(_ sender: UIButton) {
         guard let nameORid = tfNameorID.text, !nameORid.isEmpty else {
-            showAlert(message: "Name or ID is required")
+            showAlert(message: "Email is required")
             return
         }
 
@@ -108,6 +109,7 @@ class LoginVC: UIViewController {
                 self.navigationController?.pushViewController(homeVc, animated: true)
 
                 KeychainHelper.shared.saveToken(token: doctorResponse.token, forKey: "DR_Token")
+                UserDefaults.standard.set(doctorResponse.userName, forKey: "DR_Name")
 
             } else if let patientResponse = response as? PatientLoginResponse {
                 print("Patient login successful! Token: \(patientResponse.token)")
@@ -147,9 +149,9 @@ class LoginVC: UIViewController {
 
     func updatePlaceholder() {
         if segmentedControl.selectedSegmentIndex == 0 {
-            tfNameorID.placeholder = "Enter Doctor Name"
+            tfNameorID.placeholder = "Enter email"
         } else {
-            tfNameorID.placeholder = "Enter National ID"
+            tfNameorID.placeholder = "Enter email"
         }
     }
 

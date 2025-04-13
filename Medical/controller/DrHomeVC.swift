@@ -13,6 +13,20 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Create a back button with SF Symbol and black tint
+        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
+        let backButton = UIButton(type: .system)
+        backButton.setImage(backImage, for: .normal)
+        backButton.setTitle(" Back", for: .normal)
+        backButton.tintColor = .black
+        backButton.setTitleColor(.black, for: .normal)
+     // 💪 Set bold system font
+         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+
+        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = backBarButtonItem
         collectionView.dataSource = handler
         collectionView.delegate = handler
         handler.delegate = self
@@ -22,7 +36,7 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
             let numberOfColumns: CGFloat = 2
             let padding: CGFloat = 10 // Adjust the padding as needed
             let totalPadding = (numberOfColumns + 1) * padding
-            let itemWidth = (collectionView.frame.width - totalPadding) / numberOfColumns
+            _ = (collectionView.frame.width - totalPadding) / numberOfColumns
             
             // Set the cell size to 150x150
             layout.itemSize = CGSize(width: 150, height: 150) // Set width and height to 150
@@ -191,5 +205,8 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
         present(alert, animated: true, completion: nil)
         
         print("Logged out")
+    }
+    @objc func backTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }

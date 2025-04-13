@@ -1,5 +1,17 @@
 
 import Foundation
+
+import UIKit
+
+class Utilities {
+    static func showAlert(on vc: UIViewController, title: String, message: String) {
+        DispatchQueue.main.async {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            vc.present(alert, animated: true)
+        }
+    }
+}
 struct URLS{
     
     

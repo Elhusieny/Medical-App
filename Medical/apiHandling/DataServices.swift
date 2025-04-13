@@ -35,7 +35,7 @@ let doctorRegisterUrl = URLS.doctorRegisterUrl
             case .success(let data):
                 do {
                     // Try to parse the response data into a JSON object
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    if try JSONSerialization.jsonObject(with: data, options: []) is [String: Any] {
                         if response.response?.statusCode == 200 {
                             completion(true, nil)
                         } else {
@@ -97,11 +97,11 @@ struct DoctorLoginDataService {
 class GetAllDoctorsDataServices {
     
     // Singleton instance
-        static let shared = GetAllDoctorsDataServices()
-        
-        private init() {} // Prevent initialization from other places
-        
-        // Function to fetch doctors from API
+    static let shared = GetAllDoctorsDataServices()
+    
+    private init() {} // Prevent initialization from other places
+    
+    // Function to fetch doctors from API
     func fetchDoctors(token: String, completion: @escaping (Result<[Doctors], Error>) -> Void) {
         let url = URLS.getAllDoctorsURL
         
@@ -123,6 +123,8 @@ class GetAllDoctorsDataServices {
                 }
             }
     }
+    
+    
 }
 struct GetAllPatientsDataServices
 {
@@ -155,7 +157,7 @@ struct GetDoctorDataService {
     
     func fetchDoctorData(token: String, completion: @escaping (Result<DoctorData, Error>) -> Void) {
         // Retrieve userName from UserDefaults
-        let userName = UserDefaults.standard.string(forKey: "DR_UserName")
+        let userName = UserDefaults.standard.string(forKey: "DR_Name")
         guard let userName = userName else {
             // Handle the case where userName is not available
             print("No userName found in UserDefaults")
@@ -187,6 +189,22 @@ struct GetDoctorDataService {
                     completion(.failure(error))
                 }
             }
+    }
+    func updateDoctorProfile(token: String, updatedDoctor: UpdateDoctorProfileRequest, completion: @escaping (String?) -> Void) {
+        let url = "http://158.220.90.131:44500/api/Doctors/ramy"
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(token)",
+            "Content-Type": "application/json"
+        ]
+        
+        AF.request(url, method: .put, parameters: updatedDoctor, encoder: JSONParameterEncoder.default, headers: headers).response { response in
+            switch response.result {
+            case .success:
+                completion(nil)
+            case .failure(let error):
+                completion(error.localizedDescription)
+            }
+        }
     }
 }
 struct PostPatientRegisterDataService {
@@ -220,7 +238,7 @@ struct PostPatientRegisterDataService {
             case .success(let data):
                 do {
                     // Try to parse the response data into a JSON object
-                    if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                    if try JSONSerialization.jsonObject(with: data, options: []) is [String: Any] {
                         if response.response?.statusCode == 200 {
                             // Successfully registered patient
                             completion(true, nil)
@@ -416,4 +434,41 @@ class DataServices {
             }
         }
     }
+    
+    func getPatientProfile(id: String, token: String, completion: @escaping (Result<PatientProfile, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/Patients/\(id)"
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(token)"
+        ]
+        
+        AF.request(url, method: .get, headers: headers)
+            .validate()
+            .responseDecodable(of: PatientProfile.self) { response in
+                switch response.result {
+                case .success(let profile):
+                    completion(.success(profile))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+    func updatePatientProfile(id: String, updatedProfile: UpdatePatientProfileRequest, token: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+            let url = "http://158.220.90.131:44500/api/Patients/\(id)"
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(token)",
+                "Content-Type": "application/json"
+            ]
+            
+            AF.request(url, method: .put, parameters: updatedProfile, encoder: JSONParameterEncoder.default, headers: headers)
+                .validate()
+                .response { response in
+                    switch response.result {
+                    case .success:
+                        completion(.success(true))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
+                }
+        }
+
 }
