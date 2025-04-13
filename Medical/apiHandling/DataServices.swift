@@ -320,24 +320,38 @@ class DataService {
     }
 
     func updateDoctorWorkingTimes(times: DoctorWorkingTimes, token: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek"
-        
-        let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
-
-        AF.request(url, method: .put, parameters: times, encoder: JSONParameterEncoder.default, headers: headers)
-            .validate()
-            .response { response in
-                switch response.result {
-                case .success:
-                    completion(.success("Working times updated successfully."))
-                case .failure(let error):
-                    print("PUT Error: \(error.localizedDescription)")
-                    print("Status Code: \(response.response?.statusCode ?? 0)")
-                    print("Raw Response: \(String(data: response.data ?? Data(), encoding: .utf8) ?? "nil")")
-                    completion(.failure(error))
+        // Retrieve the doctorId from UserDefaults
+        if let doctorId = UserDefaults.standard.string(forKey: "DR_ID") {
+            // Build the URL with the doctorId
+            let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek/\(doctorId)"
+            
+            // Set headers including the token
+            let headers: HTTPHeaders = [
+                "Authorization": "Bearer \(token)",
+                "Content-Type": "application/json"
+            ]
+            
+            // Send the PUT request
+            AF.request(url, method: .put, parameters: times, encoder: JSONParameterEncoder.default, headers: headers)
+                .validate()
+                .response { response in
+                    switch response.result {
+                    case .success:
+                        completion(.success("Working times updated successfully."))
+                    case .failure(let error):
+                        print("PUT Error: \(error.localizedDescription)")
+                        print("Status Code: \(response.response?.statusCode ?? 0)")
+                        print("Raw Response: \(String(data: response.data ?? Data(), encoding: .utf8) ?? "nil")")
+                        completion(.failure(error))
+                    }
                 }
-            }
+        } else {
+            // Handle the case where the doctorId is not found in UserDefaults
+            print("Doctor ID not found in UserDefaults")
+            completion(.failure(NSError(domain: "", code: 404, userInfo: [NSLocalizedDescriptionKey: "Doctor ID not found"])))
+        }
     }
+
 
     func fetchDoctorWorkingTimes(doctorId: String, token: String, completion: @escaping (Result<DoctorWorkingTimes, Error>) -> Void) {
         let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek/GetAllDaysOfTheWeekByDoctorId/\(doctorId)"
