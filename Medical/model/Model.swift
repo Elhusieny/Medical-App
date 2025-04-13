@@ -91,6 +91,60 @@ struct PostDrWorkingHoursInDays: Codable {
     let thursDayFrom, thursDayTo, friDayFrom, friDayTo: String
     let saturDayFrom, saturDayTo, doctorId: String
 }
+struct DoctorWorkingDays: Codable {
+    var id: Int?
+    var sunDayFrom: String?
+    var sunDayTo: String?
+    var monDayFrom: String?
+    var monDayTo: String?
+    var tuesDayFrom: String?
+    var tuesDayTo: String?
+    var wednesDayFrom: String?
+    var wednesDayTo: String?
+    var thursDayFrom: String?
+    var thursDayTo: String?
+    var friDayFrom: String?
+    var friDayTo: String?
+    var saturDayFrom: String?
+    var saturDayTo: String?
+    var doctorId: String
+}
+struct DoctorWorkingTimes: Codable {
+    var id: String? // Optional for update purposes
+    var doctorId: String
+    var sunDayFrom: String?
+    var sunDayTo: String?
+    var monDayFrom: String?
+    var monDayTo: String?
+    var tuesDayFrom: String?
+    var tuesDayTo: String?
+    var wednesDayFrom: String?
+    var wednesDayTo: String?
+    var thursDayFrom: String?
+    var thursDayTo: String?
+    var friDayFrom: String?
+    var friDayTo: String?
+    var saturDayFrom: String?
+    var saturDayTo: String?
+}
+
+
+struct DoctorWorkingTime: Codable {
+    let day: String
+    let startTime: String
+    let endTime: String
+}
+
+struct DoctorWorkingScheduleRequest: Codable {
+    let doctorId: String
+    let scheduleId: Int? // nil for POST, set for PUT
+    let workingTimes: [DoctorWorkingTime]
+}
+
+struct DoctorWorkingScheduleResponse: Codable {
+    let message: String
+    let scheduleId: Int? // optional, may be returned on POST
+}
 
 struct SortedTimeInterval: Codable {
     let result: [ResultInterval]

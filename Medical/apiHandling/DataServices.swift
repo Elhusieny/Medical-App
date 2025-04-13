@@ -295,6 +295,111 @@ struct PatientLoginDataService {
             }
     }
 }
+class DataService {
+
+    static let shared = DataService()
+    private init() {}
+
+    func postDoctorWorkingTimes(times: DoctorWorkingTimes, token: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek"
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
+        
+        AF.request(url, method: .post, parameters: times, encoder: JSONParameterEncoder.default, headers: headers)
+            .validate()
+            .response { response in
+                switch response.result {
+                case .success:
+                    completion(.success("Working times posted successfully."))
+                case .failure(let error):
+                    print("POST Error: \(error.localizedDescription)")
+                    print("Status Code: \(response.response?.statusCode ?? 0)")
+                    print("Raw Response: \(String(data: response.data ?? Data(), encoding: .utf8) ?? "nil")")
+                    completion(.failure(error))
+                }
+            }
+    }
+
+    func updateDoctorWorkingTimes(times: DoctorWorkingTimes, token: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek"
+        
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
+
+        AF.request(url, method: .put, parameters: times, encoder: JSONParameterEncoder.default, headers: headers)
+            .validate()
+            .response { response in
+                switch response.result {
+                case .success:
+                    completion(.success("Working times updated successfully."))
+                case .failure(let error):
+                    print("PUT Error: \(error.localizedDescription)")
+                    print("Status Code: \(response.response?.statusCode ?? 0)")
+                    print("Raw Response: \(String(data: response.data ?? Data(), encoding: .utf8) ?? "nil")")
+                    completion(.failure(error))
+                }
+            }
+    }
+
+    func fetchDoctorWorkingTimes(doctorId: String, token: String, completion: @escaping (Result<DoctorWorkingTimes, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek/GetAllDaysOfTheWeekByDoctorId/\(doctorId)"
+        
+        // Add the Authorization header with the Bearer token
+        let headers: HTTPHeaders = ["Authorization": "Bearer \(token)"]
+
+        AF.request(url, headers: headers).response { response in
+            print("Status Code: \(response.response?.statusCode ?? 0)")
+            if let data = response.data {
+                print("Response Data: \(String(data: data, encoding: .utf8) ?? "No Data")")
+            }
+            // Handle success/failure
+                   switch response.result {
+                   case .success:
+                       do {
+                           if let data = response.data {
+                               // Decode the response data into an array of DoctorWorkingTimes
+                               let decoder = JSONDecoder()
+                               let doctorWorkingTimesArray = try decoder.decode([DoctorWorkingTimes].self, from: data)
+                               
+                               // Filter out any invalid times (e.g., "string" values)
+                               if let doctorWorkingTimes = doctorWorkingTimesArray.first {
+                                   let cleanedWorkingTimes = doctorWorkingTimes.cleanInvalidTimes()
+                                   completion(.success(cleanedWorkingTimes))
+                               } else {
+                                   completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No working times found."])))
+                               }
+                           }
+                       } catch {
+                           completion(.failure(error))
+                       }
+                   case .failure(let error):
+                       completion(.failure(error))
+                   }
+               }
+           }
+
+}
+extension DoctorWorkingTimes {
+    func cleanInvalidTimes() -> DoctorWorkingTimes {
+        return DoctorWorkingTimes(
+            id: self.id,
+            doctorId: self.doctorId,
+            sunDayFrom: self.sunDayFrom == "string" ? nil : self.sunDayFrom,
+            sunDayTo: self.sunDayTo == "string" ? nil : self.sunDayTo,
+            monDayFrom: self.monDayFrom == "string" ? nil : self.monDayFrom,
+            monDayTo: self.monDayTo == "string" ? nil : self.monDayTo,
+            tuesDayFrom: self.tuesDayFrom == "string" ? nil : self.tuesDayFrom,
+            tuesDayTo: self.tuesDayTo == "string" ? nil : self.tuesDayTo,
+            wednesDayFrom: self.wednesDayFrom == "string" ? nil : self.wednesDayFrom,
+            wednesDayTo: self.wednesDayTo == "string" ? nil : self.wednesDayTo,
+            thursDayFrom: self.thursDayFrom == "string" ? nil : self.thursDayFrom,
+            thursDayTo: self.thursDayTo == "string" ? nil : self.thursDayTo,
+            friDayFrom: self.friDayFrom == "string" ? nil : self.friDayFrom,
+            friDayTo: self.friDayTo == "string" ? nil : self.friDayTo,
+            saturDayFrom: self.saturDayFrom == "string" ? nil : self.saturDayFrom,
+            saturDayTo: self.saturDayTo == "string" ? nil : self.saturDayTo
+        )
+    }
+}
+
 
 class PostDrWorkingHoursDataService {
 
