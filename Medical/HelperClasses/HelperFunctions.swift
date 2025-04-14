@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SwiftUI
 class HelperFunctions{
     
     // Helper function to add icon to text field
@@ -81,4 +82,22 @@ class HelperFunctions{
     }
 
 
+}
+struct BackButton: View {
+    @Environment(\.presentationMode) var presentationMode
+
+    var body: some View {
+        Button(action: {
+            presentationMode.wrappedValue.dismiss() // Navigate back to the previous screen
+        }) {
+            HStack(spacing: 0) { // Set spacing to 0
+                
+                Image(systemName: "chevron.left") // Custom back icon
+                    .foregroundColor(.black) // Set color
+                    .font(.system(size: 15)) // Set size
+                Text("Back").foregroundColor(.black).bold()
+                
+            }
+        }
+    }
 }

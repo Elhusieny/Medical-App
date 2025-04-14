@@ -11,9 +11,13 @@ class LoginVC: UIViewController {
     // ViewModel instances
     private let doctorViewModel = DoctorLoginViewModel()
     private let patientViewModel = PatientLoginViewModel()
-
+   
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+           view.addGestureRecognizer(tap)
+        
         // Set the color of the thumb and the background of the switch
            switchBtnRememberme.onTintColor = UIColor(red: 139/255, green: 0, blue: 0, alpha: 1) // Red background color
            switchBtnRememberme.thumbTintColor = .white // White thumb color
@@ -195,6 +199,9 @@ class LoginVC: UIViewController {
         button.backgroundColor = UIColor(red: 139/255, green: 0, blue: 0, alpha: 1)
         button.layer.cornerRadius = 20
         button.translatesAutoresizingMaskIntoConstraints = false
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 
 

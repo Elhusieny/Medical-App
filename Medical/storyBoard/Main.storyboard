@@ -294,9 +294,6 @@
                                     <action selector="btnRegister:" destination="5qB-3K-CX0" eventType="touchUpInside" id="tvy-f4-vk1"/>
                                 </connections>
                             </button>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="jRK-p1-iyw">
-                                <rect key="frame" x="170" y="670" width="53" height="50"/>
-                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YdE-y9-9kw"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -304,18 +301,14 @@
                             <constraint firstItem="b31-g3-jOr" firstAttribute="top" secondItem="woD-hH-LTQ" secondAttribute="bottom" constant="51" id="14Y-NY-PI5"/>
                             <constraint firstItem="woD-hH-LTQ" firstAttribute="top" secondItem="G7r-UZ-I6F" secondAttribute="bottom" constant="34" id="2XP-V0-RNs"/>
                             <constraint firstItem="G7r-UZ-I6F" firstAttribute="top" secondItem="YdE-y9-9kw" secondAttribute="top" constant="40" id="9LI-Ej-a9i"/>
-                            <constraint firstItem="jRK-p1-iyw" firstAttribute="top" secondItem="b31-g3-jOr" secondAttribute="bottom" constant="8" symbolic="YES" id="Kc4-U0-2KG"/>
                             <constraint firstItem="G7r-UZ-I6F" firstAttribute="leading" secondItem="YdE-y9-9kw" secondAttribute="leading" constant="60" id="Vjp-wH-ezp"/>
-                            <constraint firstItem="YdE-y9-9kw" firstAttribute="trailing" secondItem="jRK-p1-iyw" secondAttribute="trailing" constant="187" id="kFL-l9-qFn"/>
                             <constraint firstItem="YdE-y9-9kw" firstAttribute="trailing" secondItem="b31-g3-jOr" secondAttribute="trailing" constant="30" id="lnb-Mj-Cmy"/>
                             <constraint firstItem="YdE-y9-9kw" firstAttribute="trailing" secondItem="G7r-UZ-I6F" secondAttribute="trailing" constant="60" id="va6-sH-k8f"/>
-                            <constraint firstItem="jRK-p1-iyw" firstAttribute="leading" secondItem="YdE-y9-9kw" secondAttribute="leading" constant="186" id="xuc-Je-Cep"/>
                             <constraint firstItem="b31-g3-jOr" firstAttribute="leading" secondItem="YdE-y9-9kw" secondAttribute="leading" constant="30" id="zEL-9V-K4z"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="Qdp-ej-2GV"/>
                     <connections>
-                        <outlet property="activityIndicator" destination="jRK-p1-iyw" id="xt2-Tu-Gz8"/>
                         <outlet property="btnRegister" destination="b31-g3-jOr" id="YUr-kD-5so"/>
                         <outlet property="segmentedControl" destination="G7r-UZ-I6F" id="DHW-nI-XUs"/>
                         <outlet property="tfAddress" destination="dkR-gR-ZPM" id="cLX-31-NUL"/>
@@ -1203,7 +1196,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="submitWorkingTimes"/>
                                 <connections>
-                                    <action selector="submitWorkingTimes" destination="d1a-vz-8Iu" eventType="touchUpInside" id="DF9-QO-JCe"/>
+                                    <action selector="submitWorkingTimes" destination="d1a-vz-8Iu" eventType="touchUpInside" id="Uoz-Nd-g0R"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ucy-bQ-GF7">
@@ -1300,7 +1293,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Show Schedule"/>
                                 <connections>
-                                    <action selector="showSchedule" destination="d1a-vz-8Iu" eventType="touchUpInside" id="8iq-5a-HZb"/>
+                                    <action selector="showSchedule" destination="d1a-vz-8Iu" eventType="touchUpInside" id="XRA-Za-w6f"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1324,8 +1317,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="Bg9-tS-KWf"/>
                     <connections>
-                        <outlet property="btnShowSchedule" destination="kw9-ec-5hx" id="Rqu-UK-QXS"/>
-                        <outlet property="btnSubmitWorkintTimes" destination="UAM-d7-dCE" id="zEd-uT-bfp"/>
+                        <outlet property="btnShowSchedule" destination="kw9-ec-5hx" id="lKy-wE-kEC"/>
+                        <outlet property="btnSubmitWorkintTimes" destination="UAM-d7-dCE" id="bpB-yD-dBY"/>
                         <outlet property="fridayButton" destination="78A-Hp-wud" id="Tzk-6D-UUT"/>
                         <outlet property="mondayButton" destination="2vY-lv-Ble" id="dE7-Ib-7iF"/>
                         <outlet property="saturdayButton" destination="PyM-8F-LeM" id="0fj-Ex-U3P"/>

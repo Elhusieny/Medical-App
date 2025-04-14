@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 import Foundation
 class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
@@ -13,20 +14,22 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Create a back button with SF Symbol and black tint
-        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
-        let backButton = UIButton(type: .system)
-        backButton.setImage(backImage, for: .normal)
-        backButton.setTitle(" Back", for: .normal)
-        backButton.tintColor = .black
-        backButton.setTitleColor(.black, for: .normal)
-     // 💪 Set bold system font
-         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+//        
+//        // Create a back button with SF Symbol and black tint
+//        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
+//        let backButton = UIButton(type: .system)
+//        backButton.setImage(backImage, for: .normal)
+//        backButton.setTitle(" Back", for: .normal)
+//        backButton.tintColor = .black
+//        backButton.setTitleColor(.black, for: .normal)
+//     // 💪 Set bold system font
+//         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+//        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+//
+//        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+//        navigationItem.leftBarButtonItem = backBarButtonItem
+        self.navigationItem.hidesBackButton = true
 
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
         collectionView.dataSource = handler
         collectionView.delegate = handler
         handler.delegate = self
@@ -60,13 +63,13 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
         
         switch function {
         case "Add Prescription":
-            navigateToViewController(withIdentifier: "AddPrescriptionVC")
+            navigateToSwiftUIScreen()
         case "Reservations":
             navigateToViewController(withIdentifier: "ReservationsVC")
         case "Working Times":
             navigateToViewController(withIdentifier: "drworkingtimes")
         case "History":
-            navigateToViewController(withIdentifier: "PrescriptionHistoryVC")
+            navigateToRoshetaHistoryScreen()
         default:
             break
         }
@@ -78,7 +81,16 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
             navigationController?.pushViewController(vc, animated: true)
         }
     }
-    
+    private func navigateToRoshetaHistoryScreen() {
+        let roshetaHistory = RoshetaHistoryScreen()
+        let hostingController = UIHostingController(rootView: roshetaHistory)
+        navigationController?.pushViewController(hostingController, animated: true)
+    }
+    private func navigateToSwiftUIScreen() {
+        let roshetaView = RoshetaScreen()
+        let hostingController = UIHostingController(rootView: roshetaView)
+        navigationController?.pushViewController(hostingController, animated: true)
+    }
     
     // MARK: - Toolbar Setup
     private func addToolbar() {
@@ -206,7 +218,7 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
         
         print("Logged out")
     }
-    @objc func backTapped() {
-        navigationController?.popViewController(animated: true)
-    }
+//    @objc func backTapped() {
+//        navigationController?.popViewController(animated: true)
+//    }
 }

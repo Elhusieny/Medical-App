@@ -9,18 +9,20 @@ class HomeVC: UIViewController {
         super.viewDidLoad()
         self.title="Home"
         // Create a back button with SF Symbol and black tint
-        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
-        let backButton = UIButton(type: .system)
-        backButton.setImage(backImage, for: .normal)
-        backButton.setTitle(" Back", for: .normal)
-        backButton.tintColor = .black
-        backButton.setTitleColor(.black, for: .normal)
-     // 💪 Set bold system font
-         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+//        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
+//        let backButton = UIButton(type: .system)
+//        backButton.setImage(backImage, for: .normal)
+//        backButton.setTitle(" Back", for: .normal)
+//        backButton.tintColor = .black
+//        backButton.setTitleColor(.black, for: .normal)
+//     // 💪 Set bold system font
+//         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+//        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+//
+//        let backBarButtonItem = UIBarButtonItem(customView: backButton)
+//        navigationItem.leftBarButtonItem = backBarButtonItem
+        self.navigationItem.hidesBackButton = true
 
-        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-        navigationItem.leftBarButtonItem = backBarButtonItem
         collectionViewHandler = DoctorsCollectionViewHandler(viewModel: viewModel)
         collectionView.dataSource = collectionViewHandler
         collectionView.delegate = collectionViewHandler
@@ -33,9 +35,9 @@ class HomeVC: UIViewController {
 
         fetchDoctors()
     }
-    @objc func backTapped() {
-        navigationController?.popViewController(animated: true)
-    }
+//    @objc func backTapped() {
+//        navigationController?.popViewController(animated: true)
+//    }
 
     
     func fetchDoctors() {

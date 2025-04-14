@@ -203,4 +203,56 @@ struct UpdatePatientProfileRequest: Codable {
     var password: String
     var ConfirmPassword: String
 }
+//-Mark: get patient data by patient code
+struct Patient: Codable {
+    let id: String
+    let nationalID: String
+    let patientCode: Int
+    let userName: String
+    let email: String
+    let phone: String
+    let address: String
+    let chronicDiseases: String
+    let previousOperations: String
+    let allergies: String
+    let currentMedications: String
+    let comments: String
+}
+
+//-mark: doctor post rosheta to patient
+struct RoshetaRequest: Codable {
+    let diagnosis: String
+    let medicine: String
+    let analysis: String
+    let x_Rays: String
+    let additionalNotes: String
+    let doctorId: String
+    let patientId: String
+}
+
+
+//-mark: get all rosheta doctor entered to patient
+    struct RoshetaHistoryModel:Identifiable, Decodable {
+        let id: String
+        let diagnosis: String?
+        let medicine: String?
+        let analysis: String?
+        let xRays: String?
+        let additionalNotes: String?
+        let patientCode: Int
+        let doctorId: String
+        let patientId: String
+        let doctor: String?
+        let patient: String?
+        let createdOn: String?
+        let createdBy: String
+        let updatedOn: String
+        let updatedBy: String
+
+        enum CodingKeys: String, CodingKey {
+            case id, diagnosis, medicine, analysis
+            case xRays = "x_Rays" // this fixes the mismatch
+            case additionalNotes, patientCode, doctorId, patientId, doctor, patient, createdOn, createdBy, updatedOn, updatedBy
+        }
+    }
 

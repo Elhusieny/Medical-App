@@ -10,7 +10,7 @@ class RegisterVC: UIViewController {
     @IBOutlet weak var tfEmail: UITextField!
     @IBOutlet weak var tfPhone: UITextField!
     @IBOutlet weak var tfAddress: UITextField!
-    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
+   // @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var btnRegister: UIButton!
 
@@ -29,23 +29,23 @@ class RegisterVC: UIViewController {
 
         // Setup viewModel listeners for Doctor registration
         doctorViewModel.onRegisterSuccess = {
-            self.activityIndicator.stopAnimating()
+            //self.activityIndicator.stopAnimating()
             self.navigateToLogin()
         }
 
         doctorViewModel.onRegisterFailure = { error in
-            self.activityIndicator.stopAnimating()
+            //self.activityIndicator.stopAnimating()
             self.showAlert(message: "Doctor Registration failed: \(String(describing: error))")
         }
 
         // Setup viewModel listeners for Patient registration
         patientViewModel.onRegisterSuccess = {
-            self.activityIndicator.stopAnimating()
+          //  self.activityIndicator.stopAnimating()
             self.navigateToLogin()
         }
 
         patientViewModel.onRegisterFailure = { error in
-            self.activityIndicator.stopAnimating()
+           // self.activityIndicator.stopAnimating()
             self.showAlert(message: "Patient Registration failed: \(String(describing: error))")
         }
         // 🔽 Add icons to text fields
@@ -63,7 +63,7 @@ class RegisterVC: UIViewController {
     // Action for the Register button
     @IBAction func btnRegister(_ sender: UIButton) {
         if validateFields() {
-            activityIndicator.startAnimating()
+            //activityIndicator.startAnimating()
 
             if segmentedControl.selectedSegmentIndex == 0 {
                 // Doctor Registration

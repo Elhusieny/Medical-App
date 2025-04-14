@@ -23,12 +23,14 @@
 		CA0BC98D2C907ED000909BAA /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0BC98C2C907ED000909BAA /* Utilities.swift */; };
 		CA0BC98F2C907F2800909BAA /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0BC98E2C907F2800909BAA /* Model.swift */; };
 		CA0BC9952C90843D00909BAA /* DataServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0BC9942C90843D00909BAA /* DataServices.swift */; };
+		CA2E9D322DAD365E003885E1 /* RoshetaScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA2E9D312DAD365E003885E1 /* RoshetaScreen.swift */; };
 		CA3628912C999C440000A968 /* DrProfileDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3628902C999C440000A968 /* DrProfileDataVC.swift */; };
 		CA393F662C996CFF00CA826A /* PatientsCollectionViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA393F652C996CFF00CA826A /* PatientsCollectionViewHandler.swift */; };
 		CA393F682C996D3800CA826A /* PatientsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA393F672C996D3800CA826A /* PatientsCollectionViewCell.swift */; };
 		CA393F6A2C996DCE00CA826A /* PatientsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA393F692C996DCE00CA826A /* PatientsVC.swift */; };
 		CA393F6C2C99838A00CA826A /* PatientDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA393F6B2C99838A00CA826A /* PatientDataVC.swift */; };
 		CA3B85E32CA00A6000A1BF32 /* DrWorkingTimes.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3B85E22CA00A6000A1BF32 /* DrWorkingTimes.swift */; };
+		CA3BECFC2DAFE9D100AA4680 /* RoshetaHistoryScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3BECFB2DAFE9D100AA4680 /* RoshetaHistoryScreen.swift */; };
 		CA3FD55B2C932E6100137533 /* DoctorsCollectionViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA3FD55A2C932E6100137533 /* DoctorsCollectionViewHandler.swift */; };
 		CA5CE5EA2C9B16BF00668634 /* DrProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CE5E92C9B16BF00668634 /* DrProfileVC.swift */; };
 		CA7643082DA3E6F100578CE0 /* DrHomeViewHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA7643072DA3E6F100578CE0 /* DrHomeViewHandler.swift */; };
@@ -68,12 +70,14 @@
 		CA0BC98C2C907ED000909BAA /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		CA0BC98E2C907F2800909BAA /* Model.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		CA0BC9942C90843D00909BAA /* DataServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataServices.swift; sourceTree = "<group>"; };
+		CA2E9D312DAD365E003885E1 /* RoshetaScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoshetaScreen.swift; sourceTree = "<group>"; };
 		CA3628902C999C440000A968 /* DrProfileDataVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrProfileDataVC.swift; sourceTree = "<group>"; };
 		CA393F652C996CFF00CA826A /* PatientsCollectionViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientsCollectionViewHandler.swift; sourceTree = "<group>"; };
 		CA393F672C996D3800CA826A /* PatientsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientsCollectionViewCell.swift; sourceTree = "<group>"; };
 		CA393F692C996DCE00CA826A /* PatientsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientsVC.swift; sourceTree = "<group>"; };
 		CA393F6B2C99838A00CA826A /* PatientDataVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientDataVC.swift; sourceTree = "<group>"; };
 		CA3B85E22CA00A6000A1BF32 /* DrWorkingTimes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrWorkingTimes.swift; sourceTree = "<group>"; };
+		CA3BECFB2DAFE9D100AA4680 /* RoshetaHistoryScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoshetaHistoryScreen.swift; sourceTree = "<group>"; };
 		CA3FD55A2C932E6100137533 /* DoctorsCollectionViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorsCollectionViewHandler.swift; sourceTree = "<group>"; };
 		CA5CE5E92C9B16BF00668634 /* DrProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrProfileVC.swift; sourceTree = "<group>"; };
 		CA7643072DA3E6F100578CE0 /* DrHomeViewHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrHomeViewHandler.swift; sourceTree = "<group>"; };
@@ -142,6 +146,7 @@
 		CA0BC9692C9079EA00909BAA /* Medical */ = {
 			isa = PBXGroup;
 			children = (
+				CA2E9D302DAD361E003885E1 /* swiftUiScreens */,
 				CAF51C162CAD461D001F9C74 /* GoogleService-Info.plist */,
 				CA3FD55C2C932F7100137533 /* collectionView */,
 				CA0BC9932C907FFC00909BAA /* storyBoard */,
@@ -216,6 +221,15 @@
 				CA0BC9752C9079EE00909BAA /* LaunchScreen.storyboard */,
 			);
 			path = storyBoard;
+			sourceTree = "<group>";
+		};
+		CA2E9D302DAD361E003885E1 /* swiftUiScreens */ = {
+			isa = PBXGroup;
+			children = (
+				CA2E9D312DAD365E003885E1 /* RoshetaScreen.swift */,
+				CA3BECFB2DAFE9D100AA4680 /* RoshetaHistoryScreen.swift */,
+			);
+			path = swiftUiScreens;
 			sourceTree = "<group>";
 		};
 		CA393F642C996C7600CA826A /* patientsCVclasses */ = {
@@ -405,6 +419,7 @@
 				CA3FD55B2C932E6100137533 /* DoctorsCollectionViewHandler.swift in Sources */,
 				CAE3863F2CA8682A0033A43B /* DateCollectionViewManager.swift in Sources */,
 				CA393F682C996D3800CA826A /* PatientsCollectionViewCell.swift in Sources */,
+				CA2E9D322DAD365E003885E1 /* RoshetaScreen.swift in Sources */,
 				CA393F6A2C996DCE00CA826A /* PatientsVC.swift in Sources */,
 				CA76430A2DA3E70200578CE0 /* DrHomeCell.swift in Sources */,
 				CAD33FB32C9B98CF003BD190 /* DoctorDetailsVC.swift in Sources */,
@@ -429,6 +444,7 @@
 				CA7643082DA3E6F100578CE0 /* DrHomeViewHandler.swift in Sources */,
 				CA0BC9832C907B6B00909BAA /* RegisterVC.swift in Sources */,
 				CA0AC6872C9C59EE00618587 /* PatientProfileVC.swift in Sources */,
+				CA3BECFC2DAFE9D100AA4680 /* RoshetaHistoryScreen.swift in Sources */,
 				CA0BC98D2C907ED000909BAA /* Utilities.swift in Sources */,
 				CA5CE5EA2C9B16BF00668634 /* DrProfileVC.swift in Sources */,
 				CA0BC9892C907E2900909BAA /* ViewModel.swift in Sources */,
@@ -570,11 +586,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S43G3TT63L;
+				DEVELOPMENT_TEAM = S43G3TT63L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Medical/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -583,7 +597,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -592,7 +606,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = a1flothers.com.Medical;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MEDICAL-PROVISIONING PROFILE";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -606,11 +619,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = S43G3TT63L;
+				DEVELOPMENT_TEAM = S43G3TT63L;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Medical/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -619,7 +630,7 @@
 				INFOPLIST_KEY_UIStatusBarStyle = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -628,7 +639,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = a1flothers.com.Medical;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "MEDICAL-PROVISIONING PROFILE";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

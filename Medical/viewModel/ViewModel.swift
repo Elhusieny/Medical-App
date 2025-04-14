@@ -1,4 +1,6 @@
 import Foundation
+import Combine
+
 class DoctorViewModel {
     
     // Public closure to notify the ViewController of the result
@@ -123,73 +125,37 @@ class PatientLoginViewModel {
 }
 class DrWorkingTimesViewModel {
     
-    var workingTimes: DoctorWorkingTimes?
+    var workingTimes: PostDrWorkingHoursInDays?
     
+    // Prepare working times data for posting
     func prepareWorkingTimesData(selectedDays: [String: (startTime: Date, endTime: Date)], doctorId: String) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mma"
         
-        workingTimes = DoctorWorkingTimes(
-            id: nil,
-            doctorId: doctorId,
-            sunDayFrom: selectedDays["Sun"].map { formatter.string(from: $0.startTime) },
-            sunDayTo: selectedDays["Sun"].map { formatter.string(from: $0.endTime) },
-            monDayFrom: selectedDays["Mon"].map { formatter.string(from: $0.startTime) },
-            monDayTo: selectedDays["Mon"].map { formatter.string(from: $0.endTime) },
-            tuesDayFrom: selectedDays["Tue"].map { formatter.string(from: $0.startTime) },
-            tuesDayTo: selectedDays["Tue"].map { formatter.string(from: $0.endTime) },
-            wednesDayFrom: selectedDays["Wed"].map { formatter.string(from: $0.startTime) },
-            wednesDayTo: selectedDays["Wed"].map { formatter.string(from: $0.endTime) },
-            thursDayFrom: selectedDays["Thu"].map { formatter.string(from: $0.startTime) },
-            thursDayTo: selectedDays["Thu"].map { formatter.string(from: $0.endTime) },
-            friDayFrom: selectedDays["Fri"].map { formatter.string(from: $0.startTime) },
-            friDayTo: selectedDays["Fri"].map { formatter.string(from: $0.endTime) },
-            saturDayFrom: selectedDays["Sat"].map { formatter.string(from: $0.startTime) },
-            saturDayTo: selectedDays["Sat"].map { formatter.string(from: $0.endTime) }
+        workingTimes = PostDrWorkingHoursInDays(
+            sunDayFrom: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.startTime) : "string",
+            sunDayTo: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.endTime) : "string",
+            monDayFrom: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.startTime) : "string",
+            monDayTo: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.endTime) : "string",
+            tuesDayFrom: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.startTime) : "string",
+            tuesDayTo: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.endTime) : "string",
+            wednesDayFrom: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.startTime) : "string",
+            wednesDayTo: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.endTime) : "string",
+            thursDayFrom: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.startTime) : "string",
+            thursDayTo: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.endTime) : "string",
+            friDayFrom: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.startTime) : "string",
+            friDayTo: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.endTime) : "string",
+            saturDayFrom: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.startTime) : "string",
+            saturDayTo: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.endTime) : "string",
+            doctorId: doctorId
         )
-        
-        // Debug JSON
-        if let encoded = try? JSONEncoder().encode(workingTimes),
-           let jsonString = String(data: encoded, encoding: .utf8) {
-            print("Prepared JSON for submission: \(jsonString)")
-        }
     }
     
+    // Post working times via DataService
     func postWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
-        guard let times = workingTimes else { return }
-        
-        // Get token from Keychain
-        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
-            print("❌ Token not found")
-            return
+        if let workingTimes = workingTimes {
+            PostDrWorkingHoursDataService.shared.postDoctorWorkingTimes(workingTimes: workingTimes, completion: completion)
         }
-        
-        DataService.shared.postDoctorWorkingTimes(times: times, token: token) { result in
-            completion(result)
-        }
-    }
-    
-    func updateWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
-        guard let times = workingTimes else { return }
-        
-        // Get token from Keychain
-        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
-            print("❌ Token not found")
-            return
-        }
-        
-        DataService.shared.updateDoctorWorkingTimes(times: times, token: token) { result in
-            completion(result)
-        }
-    }
-    
-    func fetchWorkingTimes(doctorId: String, completion: @escaping (Result<DoctorWorkingTimes, Error>) -> Void) {
-        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
-            print("❌ Token not found")
-            return
-        }
-        
-        DataService.shared.fetchDoctorWorkingTimes(doctorId: doctorId,token: token, completion: completion)
     }
 }
 
@@ -276,6 +242,85 @@ extension PatientProfileViewModel {
                 completion(nil) // Success
             case .failure(let error):
                 completion("Failed to update profile: \(error.localizedDescription)")
+            }
+        }
+    }
+}
+//get patient by code
+class PatientViewModel: ObservableObject {
+    @Published var patient: Patient?
+    @Published var errorMessage: String?
+    
+    func getPatient(byCode code: Int, token: String) {
+        DataServices.shared.fetchPatient(byCode: code, token: token) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let patient):
+                    self.patient = patient
+                            // ✅ Save patient ID to UserDefaults
+                        UserDefaults.standard.set(patient.id, forKey: "PATIENT_ID")
+                    print("get patient id by patient code\(patient.id)")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+}
+class RoshetaViewModel: ObservableObject {
+    @Published var errorMessage: String?
+    @Published var successMessage: String?
+
+    func submitRosheta(diagnosis: String, medicine: String, analysis: String, xRays: String, notes: String) {
+        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token"),
+              let doctorId = UserDefaults.standard.string(forKey: "DR_ID"),
+              let patientId = UserDefaults.standard.string(forKey: "PATIENT_ID") else {
+            errorMessage = "Missing required credentials."
+            return
+        }
+
+        let rosheta = RoshetaRequest(
+            diagnosis: diagnosis,
+            medicine: medicine,
+            analysis: analysis,
+            x_Rays: xRays,
+            additionalNotes: notes,
+            doctorId: doctorId,
+            patientId: patientId
+        )
+
+        RoshetaService.shared.postRosheta(rosheta, token: token) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    self.successMessage = "Rosheta sent successfully!"
+                    print (self.successMessage ?? "empty")
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+}
+class PrescriptionViewModel: ObservableObject {
+    @Published var prescriptions: [RoshetaHistoryModel] = []
+    @Published var errorMessage: String?
+
+    func loadPrescriptions() {
+        guard let doctorId = UserDefaults.standard.string(forKey: "DR_ID"),
+              let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
+            errorMessage = "Missing doctor ID or token"
+            return
+        }
+
+        PrescriptionService.fetchPrescriptionsByDoctorId(doctorId: doctorId, token: token) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let list):
+                    self?.prescriptions = list
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
             }
         }
     }
