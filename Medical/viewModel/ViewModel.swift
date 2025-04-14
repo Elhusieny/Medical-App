@@ -123,73 +123,37 @@ class PatientLoginViewModel {
 }
 class DrWorkingTimesViewModel {
     
-    var workingTimes: DoctorWorkingTimes?
+    var workingTimes: PostDrWorkingHoursInDays?
     
+    // Prepare working times data for posting
     func prepareWorkingTimesData(selectedDays: [String: (startTime: Date, endTime: Date)], doctorId: String) {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "hh:mma"
         
-        workingTimes = DoctorWorkingTimes(
-            id: nil,
-            doctorId: doctorId,
-            sunDayFrom: selectedDays["Sun"].map { formatter.string(from: $0.startTime) },
-            sunDayTo: selectedDays["Sun"].map { formatter.string(from: $0.endTime) },
-            monDayFrom: selectedDays["Mon"].map { formatter.string(from: $0.startTime) },
-            monDayTo: selectedDays["Mon"].map { formatter.string(from: $0.endTime) },
-            tuesDayFrom: selectedDays["Tue"].map { formatter.string(from: $0.startTime) },
-            tuesDayTo: selectedDays["Tue"].map { formatter.string(from: $0.endTime) },
-            wednesDayFrom: selectedDays["Wed"].map { formatter.string(from: $0.startTime) },
-            wednesDayTo: selectedDays["Wed"].map { formatter.string(from: $0.endTime) },
-            thursDayFrom: selectedDays["Thu"].map { formatter.string(from: $0.startTime) },
-            thursDayTo: selectedDays["Thu"].map { formatter.string(from: $0.endTime) },
-            friDayFrom: selectedDays["Fri"].map { formatter.string(from: $0.startTime) },
-            friDayTo: selectedDays["Fri"].map { formatter.string(from: $0.endTime) },
-            saturDayFrom: selectedDays["Sat"].map { formatter.string(from: $0.startTime) },
-            saturDayTo: selectedDays["Sat"].map { formatter.string(from: $0.endTime) }
+        workingTimes = PostDrWorkingHoursInDays(
+            sunDayFrom: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.startTime) : "string",
+            sunDayTo: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.endTime) : "string",
+            monDayFrom: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.startTime) : "string",
+            monDayTo: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.endTime) : "string",
+            tuesDayFrom: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.startTime) : "string",
+            tuesDayTo: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.endTime) : "string",
+            wednesDayFrom: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.startTime) : "string",
+            wednesDayTo: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.endTime) : "string",
+            thursDayFrom: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.startTime) : "string",
+            thursDayTo: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.endTime) : "string",
+            friDayFrom: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.startTime) : "string",
+            friDayTo: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.endTime) : "string",
+            saturDayFrom: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.startTime) : "string",
+            saturDayTo: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.endTime) : "string",
+            doctorId: doctorId
         )
-        
-        // Debug JSON
-        if let encoded = try? JSONEncoder().encode(workingTimes),
-           let jsonString = String(data: encoded, encoding: .utf8) {
-            print("Prepared JSON for submission: \(jsonString)")
-        }
     }
     
+    // Post working times via DataService
     func postWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
-        guard let times = workingTimes else { return }
-        
-        // Get token from Keychain
-        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
-            print("❌ Token not found")
-            return
+        if let workingTimes = workingTimes {
+            PostDrWorkingHoursDataService.shared.postDoctorWorkingTimes(workingTimes: workingTimes, completion: completion)
         }
-        
-        DataService.shared.postDoctorWorkingTimes(times: times, token: token) { result in
-            completion(result)
-        }
-    }
-    
-    func updateWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
-        guard let times = workingTimes else { return }
-        
-        // Get token from Keychain
-        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
-            print("❌ Token not found")
-            return
-        }
-        
-        DataService.shared.updateDoctorWorkingTimes(times: times, token: token) { result in
-            completion(result)
-        }
-    }
-    
-    func fetchWorkingTimes(doctorId: String, completion: @escaping (Result<DoctorWorkingTimes, Error>) -> Void) {
-        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
-            print("❌ Token not found")
-            return
-        }
-        
-        DataService.shared.fetchDoctorWorkingTimes(doctorId: doctorId,token: token, completion: completion)
     }
 }
 

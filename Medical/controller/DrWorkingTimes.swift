@@ -3,7 +3,7 @@ import UIKit
 class DrWorkingTimes: UIViewController {
     
     let viewModel = DrWorkingTimesViewModel()
-    let daysOfWeek = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     var selectedDays: [String] = []
     var workingHours: [String: (startTime: Date, endTime: Date)] = [:]
     
@@ -19,7 +19,8 @@ class DrWorkingTimes: UIViewController {
     
     @IBOutlet weak var btnSubmitWorkintTimes: UIButton!
     @IBOutlet weak var btnShowSchedule: UIButton!
-    
+    let shortDayTitles = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Working Times"
@@ -51,7 +52,7 @@ class DrWorkingTimes: UIViewController {
         ]
         
         for (index, button) in buttons.enumerated() {
-            let dayTitle = daysOfWeek[index]
+            let dayTitle = shortDayTitles[index]
             let icon = UIImage(systemName: "calendar") // Or any other image you prefer
             helperFunctions.setIconButton2(for: button, withImage: icon, title: dayTitle)
             styleAsWorkingTimeButton(button)
@@ -189,86 +190,35 @@ class DrWorkingTimes: UIViewController {
     }
     
     @IBAction func submitWorkingTimes() {
-        if let doctorId = UserDefaults.standard.string(forKey: "DR_ID") {
-            print("Doctor ID: \(doctorId)")
-            
-            // Prepare the working times data
-            self.viewModel.prepareWorkingTimesData(selectedDays: self.workingHours, doctorId: doctorId)
-            print("Prepared working times: \(String(describing: self.viewModel.workingTimes))")
-            
-            // Check if working times are already available
-            if let existingTimes = self.viewModel.workingTimes {
-                // If there are existing times, update them
-                self.viewModel.updateWorkingTimes { updateResult in
-                    DispatchQueue.main.async {
-                        switch updateResult {
-                        case .success(let response):
-                            print("Working times updated successfully: \(response)")
-                            self.showSuccessAlert(message: "Working times updated successfully.")
-                        case .failure(let error):
-                            print("Error updating working times: \(error.localizedDescription)")
-                            self.showErrorAlert(error: error)
-                        }
-                    }
-                }
-            } else {
-                // If no existing working times, create new ones
-                self.viewModel.postWorkingTimes { postResult in
-                    DispatchQueue.main.async {
-                        switch postResult {
-                        case .success(let response):
-                            print("Working times created successfully: \(response)")
-                            self.showSuccessAlert(message: "Working times created successfully.")
-                        case .failure(let error):
-                            print("Error creating working times: \(error.localizedDescription)")
-                            self.showErrorAlert(error: error)
-                        }
-                    }
-                }
-            }
-        } else {
-            print("Doctor ID not found in UserDefaults")
-            self.showErrorAlert(error: NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "Doctor ID not found. Please log in again."]))
-        }
-    }
-
-    // Helper function to validate time format
-    func isValidTimeFormat(timeString: String?) -> Bool {
-        guard let time = timeString else { return false }
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm" // Example time format (24-hour format)
-        return timeFormatter.date(from: time) != nil
-    }
-
-    func hasValidWorkingTimes(_ workingTimes: DoctorWorkingTimes) -> Bool {
-        // Check if any of the times are non-nil and have a valid time format
-        return (isValidTimeFormat(timeString: workingTimes.sunDayFrom) ||
-                isValidTimeFormat(timeString: workingTimes.monDayFrom) ||
-                isValidTimeFormat(timeString: workingTimes.tuesDayFrom) ||
-                isValidTimeFormat(timeString: workingTimes.wednesDayFrom) ||
-                isValidTimeFormat(timeString: workingTimes.thursDayFrom) ||
-                isValidTimeFormat(timeString: workingTimes.friDayFrom) ||
-                isValidTimeFormat(timeString: workingTimes.saturDayFrom))
-    }
-    // Check if the working times object has any valid data
-//    func hasValidWorkingTimes(_ workingTimes: DoctorWorkingTimes) -> Bool {
-//        // Check for non-nil values in working days (you can adjust this depending on the fields you want to check)
-//        return workingTimes.sunDayFrom != nil || workingTimes.monDayFrom != nil || workingTimes.tuesDayFrom != nil ||
-//        workingTimes.wednesDayFrom != nil || workingTimes.thursDayFrom != nil || workingTimes.friDayFrom != nil ||
-//        workingTimes.saturDayFrom != nil
-//    }
-    
-    // Show success alert
-    func showSuccessAlert(message: String) {
-        let alert = UIAlertController(title: "Success", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
-    // Show error alert
-    func showErrorAlert(error: Error) {
-        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-}
+           if let doctorId = UserDefaults.standard.string(forKey: "DR_ID") {
+               print("Doctor ID: \(doctorId)")
+               
+               viewModel.prepareWorkingTimesData(selectedDays: workingHours, doctorId: doctorId)
+               viewModel.postWorkingTimes { result in
+                   DispatchQueue.main.async { // Ensure UI updates are on the main thread
+                       switch result {
+                       case .success(let response):
+                           print("Success: \(response)")
+                           // Show success message
+                           let successAlert = UIAlertController(title: "Success", message: response, preferredStyle: .alert)
+                           successAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                           self.present(successAlert, animated: true, completion: nil)
+                           
+                       case .failure(let error):
+                           print("Error: \(error.localizedDescription)")
+                           // Show error message
+                           let errorAlert = UIAlertController(title: "Error", message: "Failed to submit working times: \(error.localizedDescription)", preferredStyle: .alert)
+                           errorAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                           self.present(errorAlert, animated: true, completion: nil)
+                       }
+                   }
+               }
+           } else {
+               print("Doctor ID not found in UserDefaults")
+               // Optionally show an alert if the doctor ID is not found
+               let alert = UIAlertController(title: "Error", message: "Doctor ID not found. Please log in again.", preferredStyle: .alert)
+               alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+               present(alert, animated: true, completion: nil)
+           }
+       }
+   }

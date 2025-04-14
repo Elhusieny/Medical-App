@@ -1203,7 +1203,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="submitWorkingTimes"/>
                                 <connections>
-                                    <action selector="submitWorkingTimes" destination="d1a-vz-8Iu" eventType="touchUpInside" id="DF9-QO-JCe"/>
+                                    <action selector="submitWorkingTimes" destination="d1a-vz-8Iu" eventType="touchUpInside" id="Uoz-Nd-g0R"/>
                                 </connections>
                             </button>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ucy-bQ-GF7">
@@ -1300,7 +1300,7 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Show Schedule"/>
                                 <connections>
-                                    <action selector="showSchedule" destination="d1a-vz-8Iu" eventType="touchUpInside" id="8iq-5a-HZb"/>
+                                    <action selector="showSchedule" destination="d1a-vz-8Iu" eventType="touchUpInside" id="XRA-Za-w6f"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -1324,8 +1324,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="Bg9-tS-KWf"/>
                     <connections>
-                        <outlet property="btnShowSchedule" destination="kw9-ec-5hx" id="Rqu-UK-QXS"/>
-                        <outlet property="btnSubmitWorkintTimes" destination="UAM-d7-dCE" id="zEd-uT-bfp"/>
+                        <outlet property="btnShowSchedule" destination="kw9-ec-5hx" id="lKy-wE-kEC"/>
+                        <outlet property="btnSubmitWorkintTimes" destination="UAM-d7-dCE" id="bpB-yD-dBY"/>
                         <outlet property="fridayButton" destination="78A-Hp-wud" id="Tzk-6D-UUT"/>
                         <outlet property="mondayButton" destination="2vY-lv-Ble" id="dE7-Ib-7iF"/>
                         <outlet property="saturdayButton" destination="PyM-8F-LeM" id="0fj-Ex-U3P"/>
