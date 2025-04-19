@@ -22,13 +22,13 @@ struct DoctorData: Codable {
 
 struct DoctorLoginData:Codable
 {
-    let email,password: String
+    let phoneNumber,password: String
     let rememberMe: Bool
 }
 struct DoctorLoginResponse: Codable {
     let token: String
     let expiration: String
-    let email: String
+    let phoneNumber: String
     let id: String
     let userName:String
 }
@@ -75,21 +75,33 @@ struct PostPatientData{
 }
 //Patient Login
 struct PatientLoginData: Codable {
-    let email, password: String
+    let phone, password: String
     let rememberMe: Bool
 }
 struct PatientLoginResponse: Codable {
     let token: String
     let expiration: String
-    let email:String
+    let phone:String
     let userName: String
     let id: String
 }
 struct PostDrWorkingHoursInDays: Codable {
-    let sunDayFrom, sunDayTo, monDayFrom, monDayTo: String
-    let tuesDayFrom, tuesDayTo, wednesDayFrom, wednesDayTo: String
-    let thursDayFrom, thursDayTo, friDayFrom, friDayTo: String
-    let saturDayFrom, saturDayTo, doctorId: String
+       var id: Int?=1
+       var sunDayFrom: String?
+       var sunDayTo: String?
+       var monDayFrom: String?
+       var monDayTo: String?
+       var tuesDayFrom: String?
+       var tuesDayTo: String?
+       var wednesDayFrom: String?
+       var wednesDayTo: String?
+       var thursDayFrom: String?
+       var thursDayTo: String?
+       var friDayFrom: String?
+       var friDayTo: String?
+       var saturDayFrom: String?
+       var saturDayTo: String?
+       var doctorId: String
 }
 struct DoctorWorkingDays: Codable {
     var id: Int?
@@ -109,8 +121,11 @@ struct DoctorWorkingDays: Codable {
     var saturDayTo: String?
     var doctorId: String
 }
+
+
+
 struct DoctorWorkingTimes: Codable {
-    var id: String? // Optional for update purposes
+    var id: Int?=1 // Optional for update purposes
     var doctorId: String
     var sunDayFrom: String?
     var sunDayTo: String?
@@ -256,3 +271,17 @@ struct RoshetaRequest: Codable {
         }
     }
 
+
+struct PatientBooking: Identifiable, Codable {
+    var id: String
+    var patientId: String
+    var doctorId: String
+    var doctorTimeIntervalId: Int
+    var intervalStart: String
+    var isDelete: Int
+    var patient: String?   // It's null in response, so optional
+    var createdOn: String
+    var createdBy: String
+    var updatedOn: String
+    var updatedBy: String
+}

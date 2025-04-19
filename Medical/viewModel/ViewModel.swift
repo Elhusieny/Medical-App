@@ -123,92 +123,225 @@ class PatientLoginViewModel {
         }
     }
 }
+
+
 class DrWorkingTimesViewModel {
+    private var workingDays: [DoctorWorkingDays] = []
+
+    var postWorkingTimesModel: PostDrWorkingHoursInDays?
+    var updateWorkingTimesModel: DoctorWorkingDays?
     
-    var workingTimes: PostDrWorkingHoursInDays?
+    @Published var isEditing = false
+    @Published var isUpdating = false
+    @Published var errorMessage: String?
+    @Published var updateSuccess = false
     
-    // Prepare working times data for posting
-    func prepareWorkingTimesData(selectedDays: [String: (startTime: Date, endTime: Date)], doctorId: String) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "hh:mma"
+    // MARK: - Prepare Data
+    func prepareWorkingTimesData(selectedDays: [String: (startTime: Date, endTime: Date)], doctorId: String, existingModelId: Int? = nil) {
         
-        workingTimes = PostDrWorkingHoursInDays(
-            sunDayFrom: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.startTime) : "string",
-            sunDayTo: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.endTime) : "string",
-            monDayFrom: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.startTime) : "string",
-            monDayTo: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.endTime) : "string",
-            tuesDayFrom: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.startTime) : "string",
-            tuesDayTo: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.endTime) : "string",
-            wednesDayFrom: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.startTime) : "string",
-            wednesDayTo: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.endTime) : "string",
-            thursDayFrom: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.startTime) : "string",
-            thursDayTo: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.endTime) : "string",
-            friDayFrom: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.startTime) : "string",
-            friDayTo: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.endTime) : "string",
-            saturDayFrom: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.startTime) : "string",
-            saturDayTo: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.endTime) : "string",
+        let dateFormatter = DateFormatter()
+           dateFormatter.dateFormat = "HH:mm:ss"  // Updated to 24-hour format
+           
+        
+        postWorkingTimesModel = PostDrWorkingHoursInDays(
+            sunDayFrom: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.startTime) : nil,
+            sunDayTo: selectedDays["Sunday"] != nil ? dateFormatter.string(from: selectedDays["Sunday"]!.endTime) : nil,
+            monDayFrom: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.startTime) : nil,
+            monDayTo: selectedDays["Monday"] != nil ? dateFormatter.string(from: selectedDays["Monday"]!.endTime) : nil,
+            tuesDayFrom: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.startTime) : nil,
+            tuesDayTo: selectedDays["Tuesday"] != nil ? dateFormatter.string(from: selectedDays["Tuesday"]!.endTime) : nil,
+            wednesDayFrom: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.startTime) : nil,
+            wednesDayTo: selectedDays["Wednesday"] != nil ? dateFormatter.string(from: selectedDays["Wednesday"]!.endTime) : nil,
+            thursDayFrom: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.startTime) : nil,
+            thursDayTo: selectedDays["Thursday"] != nil ? dateFormatter.string(from: selectedDays["Thursday"]!.endTime) : nil,
+            friDayFrom: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.startTime) : nil,
+            friDayTo: selectedDays["Friday"] != nil ? dateFormatter.string(from: selectedDays["Friday"]!.endTime) : nil,
+            saturDayFrom: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.startTime) : nil,
+            saturDayTo: selectedDays["Saturday"] != nil ? dateFormatter.string(from: selectedDays["Saturday"]!.endTime) : nil,
             doctorId: doctorId
         )
-    }
-    
-    // Post working times via DataService
-    func postWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
-        if let workingTimes = workingTimes {
-            PostDrWorkingHoursDataService.shared.postDoctorWorkingTimes(workingTimes: workingTimes, completion: completion)
+        
+        // if existing id is provided -> editing
+        if let existingId = existingModelId {
+            isEditing = true
+            updateWorkingTimesModel = DoctorWorkingDays(
+                id: existingId,
+                sunDayFrom: postWorkingTimesModel?.sunDayFrom,
+                sunDayTo: postWorkingTimesModel?.sunDayTo,
+                monDayFrom: postWorkingTimesModel?.monDayFrom,
+                monDayTo: postWorkingTimesModel?.monDayTo,
+                tuesDayFrom: postWorkingTimesModel?.tuesDayFrom,
+                tuesDayTo: postWorkingTimesModel?.tuesDayTo,
+                wednesDayFrom: postWorkingTimesModel?.wednesDayFrom,
+                wednesDayTo: postWorkingTimesModel?.wednesDayTo,
+                thursDayFrom: postWorkingTimesModel?.thursDayFrom,
+                thursDayTo: postWorkingTimesModel?.thursDayTo,
+                friDayFrom: postWorkingTimesModel?.friDayFrom,
+                friDayTo: postWorkingTimesModel?.friDayTo,
+                saturDayFrom: postWorkingTimesModel?.saturDayFrom,
+                saturDayTo: postWorkingTimesModel?.saturDayTo,
+                doctorId: doctorId
+            )
+        } else {
+            isEditing = false
         }
     }
-}
-
-class DoctorStoredWorkingTimesViewModel: ObservableObject {
-    @Published var workingTimes: [ResultInterval] = []
-    @Published var errorMessage: String? = nil
+    // MARK: - Submit Function (Post or Update)
+    func submitWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
+        if isEditing {
+            updateWorkingTimes(completion: completion)
+        } else {
+            postWorkingTimes(completion: completion)
+        }
+    }
     
-    func getDoctorWorkingTimes(doctorId: String, token: String) {
-        GetAllStoredWorkingTimesDataService.shared.fetchDoctorWorkingTimes(doctorId: doctorId, token: token) { [weak self] result in
+//    private func postWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
+//        guard let postModel = postWorkingTimesModel else {
+//            completion(.failure(NSError(domain: "No data to post", code: 0)))
+//            return
+//        }
+//        PostDrWorkingHoursDataService.shared.postDoctorWorkingTimes(workingTimes: postModel, completion: completion)
+//    }
+    // Fetch Working Days from API
+       func fetchWorkingDays(token: String, doctorId: String, completion: @escaping (Result<[DoctorWorkingDays], Error>) -> Void) {
+           PostDrWorkingHoursDataService.shared.fetchDoctorWorkingDays(token: token, doctorId: doctorId) { result in
+               switch result {
+               case .success(let fetchedWorkingDays):
+                   self.workingDays = fetchedWorkingDays
+                   completion(.success(fetchedWorkingDays))
+               case .failure(let error):
+                   completion(.failure(error))
+               }
+           }
+       }
+    // Get the working days
+        func getWorkingDays() -> [DoctorWorkingDays] {
+            return workingDays
+        }
+//    private func updateWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
+//        guard let updateModel = updateWorkingTimesModel else {
+//            completion(.failure(NSError(domain: "No data to update", code: 0)))
+//            return
+//        }
+//        PostDrWorkingHoursDataService.shared.updateDoctorWorkingDays(updateModel) { [weak self] result in
+//            DispatchQueue.main.async {
+//                self?.isUpdating = false
+//                switch result {
+//                case .success:
+//                    self?.updateSuccess = true
+//                    completion(.success("Working times updated successfully"))
+//                case .failure(let error):
+//                    self?.errorMessage = error.localizedDescription
+//                    completion(.failure(error))
+//                }
+//            }
+//        }
+//    }
+    // For creating new working times (POST)
+    func postWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
+        guard let postModel = postWorkingTimesModel else {
+            completion(.failure(NSError(domain: "No data to post", code: 0)))
+            return
+        }
+        PostDrWorkingHoursDataService.shared.postDoctorWorkingTimes(workingTimes: postModel, completion: completion)
+    }
+
+    // For updating existing working times (PUT)
+    func updateWorkingTimes(completion: @escaping (Result<String, Error>) -> Void) {
+        guard let updateModel = updateWorkingTimesModel else {
+            completion(.failure(NSError(domain: "No data to update", code: 0)))
+            return
+        }
+        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
+            return
+        }
+        PostDrWorkingHoursDataService.shared.updateDoctorWorkingDays(updateModel, token: token) { [weak self] result in
             DispatchQueue.main.async {
+                self?.isUpdating = false
                 switch result {
-                case .success(let times):
-                    self?.workingTimes = times
+                case .success:
+                    self?.updateSuccess = true
+                    completion(.success("Working times updated successfully"))
                 case .failure(let error):
-                    self?.errorMessage = "Error: \(error.localizedDescription)"
+                    self?.errorMessage = error.localizedDescription
+                    completion(.failure(error))
                 }
             }
         }
     }
 }
-class BookingViewModel {
-    var availableTimes: [ResultInterval] = []
-    var selectedDate: String?
-    var selectedTime: ResultInterval?
+    class BookingViewModel: ObservableObject {
+        @Published var availableTimes: [ResultInterval] = []
+        @Published var selectedDate: String?
+        @Published var selectedTime: ResultInterval?
 
-    func fetchDoctorTimes(token: String, doctorId: String, completion: @escaping () -> Void) {
-        DataServices.shared.fetchDoctorTimes(token: token, doctorId: doctorId) { [weak self] times, error in
-            if let times = times {
-                self?.availableTimes = times
-                completion()
-            } else {
-                print("Error fetching doctor times: \(error?.localizedDescription ?? "")")
+        func fetchDoctorTimes(token: String, doctorId: String, completion: @escaping () -> Void) {
+            DataServices.shared.fetchDoctorTimes(token: token, doctorId: doctorId) { [weak self] times, error in
+                DispatchQueue.main.async {
+                    if let times = times {
+                        self?.availableTimes = times
+                    } else {
+                        print("Error fetching doctor times: \(error?.localizedDescription ?? "")")
+                    }
+                    completion()
+                }
             }
         }
-    }
 
-    func bookAppointment(token: String, patientId: String, completion: @escaping (Bool) -> Void) {
-        guard let selectedDate = selectedDate, let selectedTime = selectedTime else {
-            completion(false)
-            return
+        var availableDates: [String] {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            let isoFormatter = DateFormatter()
+            isoFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSS"
+
+            let dateStrings = availableTimes.compactMap { slot -> String? in
+                guard let date = isoFormatter.date(from: slot.intervalStart) else { return nil }
+                return dateFormatter.string(from: date)
+            }
+
+            return Array(Set(dateStrings)).sorted()
         }
 
-        let bookDate = BookDate(patientId: patientId, doctorTimeIntervalId: selectedTime.id) // Ensure this is the correct property
-        DataServices.shared.bookAppointment(token: token, bookDate: bookDate) { success, error in
-            if let error = error {
-                print("Error booking appointment: \(error.localizedDescription)")
+
+        var filteredSlots: [ResultInterval] {
+            guard let selectedDate = selectedDate else { return [] }
+
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+
+            let isoFormatter = DateFormatter()
+            isoFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSS"
+
+            return availableTimes.filter { slot in
+                if let date = isoFormatter.date(from: slot.intervalStart) {
+                    return dateFormatter.string(from: date) == selectedDate
+                }
+                return false
+            }
+        }
+
+
+        func bookAppointment(token: String, patientId: String, completion: @escaping (Bool) -> Void) {
+            guard let selectedTime = selectedTime else {
                 completion(false)
-            } else {
-                completion(success)
+                return
+            }
+
+            let bookDate = BookDate(patientId: patientId, doctorTimeIntervalId: selectedTime.id)
+            DataServices.shared.bookAppointment(token: token, bookDate: bookDate) { success, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        print("Error booking appointment: \(error.localizedDescription)")
+                        completion(false)
+                    } else {
+                        completion(success)
+                    }
+                }
             }
         }
     }
-}
+
 //handle logic between api and view
 class PatientProfileViewModel {
     var profile: PatientProfile?
@@ -303,6 +436,7 @@ class RoshetaViewModel: ObservableObject {
     }
 }
 class PrescriptionViewModel: ObservableObject {
+   
     @Published var prescriptions: [RoshetaHistoryModel] = []
     @Published var errorMessage: String?
 
@@ -318,6 +452,26 @@ class PrescriptionViewModel: ObservableObject {
                 switch result {
                 case .success(let list):
                     self?.prescriptions = list
+                case .failure(let error):
+                    self?.errorMessage = error.localizedDescription
+                }
+            }
+        }
+    }
+}
+
+
+
+class PatientBookingViewModel: ObservableObject {
+    @Published var patientBookings: [PatientBooking] = []
+    @Published var errorMessage: String?
+
+    func fetchPatientBookings(for doctorId: String) {
+        PatientBookingService.shared.getAllPatientsBooking(doctorId: doctorId) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let bookings):
+                    self?.patientBookings = bookings
                 case .failure(let error):
                     self?.errorMessage = error.localizedDescription
                 }

@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 class HomeVC: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
@@ -29,7 +30,18 @@ class HomeVC: UIViewController {
         
         // Set up the closure to handle doctor selection
         collectionViewHandler?.didSelectDoctor = { [weak self] selectedDoctor in
-            self?.performSegue(withIdentifier: "showDoctorDetails", sender: selectedDoctor)
+            guard let self = self else { return }
+
+            let swiftUIView = DoctorDetailsView(
+                doctorName: selectedDoctor.userName,
+                specialization: selectedDoctor.specialization,
+                doctorId: selectedDoctor.id ,
+                doctorImage: "doc2" // Replace with the actual image name or URL
+)
+
+            let hostingController = UIHostingController(rootView: swiftUIView)
+            self.navigationController?.pushViewController(hostingController, animated: true)
+
         }
         addToolbar()
 
@@ -41,7 +53,7 @@ class HomeVC: UIViewController {
 
     
     func fetchDoctors() {
-        let token = KeychainHelper.shared.getToken(forKey: "DR_Token")
+        let token = KeychainHelper.shared.getToken(forKey: "PT_Token")
         if let token = token {
             viewModel.fetchDoctors(token: token) { success in
                 if success {

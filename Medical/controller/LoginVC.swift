@@ -2,7 +2,7 @@ import UIKit
 
 class LoginVC: UIViewController {
 
-    @IBOutlet weak var tfNameorID: UITextField!
+    @IBOutlet weak var tfPhone: UITextField!
     @IBOutlet weak var tfPassword: UITextField!
     @IBOutlet weak var switchBtnRememberme: UISwitch!
     @IBOutlet weak var btnLoginn: UIButton!
@@ -21,7 +21,7 @@ class LoginVC: UIViewController {
         // Set the color of the thumb and the background of the switch
            switchBtnRememberme.onTintColor = UIColor(red: 139/255, green: 0, blue: 0, alpha: 1) // Red background color
            switchBtnRememberme.thumbTintColor = .white // White thumb color
-        helperFunctions.styleTextField(tfNameorID, placeholder: "Name or ID", icon: UIImage(named: "user"))
+        helperFunctions.styleTextField(tfPhone, placeholder: "Name or ID", icon: UIImage(named: "user"))
         helperFunctions.styleTextField(tfPassword, placeholder: "Password", icon: UIImage(named: "password"))
 
             setIconButton(for: btnLoginn, withImage: UIImage(named: "login"), title: "Login")
@@ -39,16 +39,16 @@ class LoginVC: UIViewController {
         let selectedIndex = segmentedControl.selectedSegmentIndex
         switch selectedIndex {
         case 0: // Doctor
-            if let savedEmail = UserDefaults.standard.string(forKey: "DR_Email"),
+            if let savedPhone = UserDefaults.standard.string(forKey: "DR_Phone"),
                let savedPassword = UserDefaults.standard.string(forKey: "DR_Password") {
-                tfNameorID.text = savedEmail
+                tfPhone.text = savedPhone
                 tfPassword.text = savedPassword
                 switchBtnRememberme.isOn = true
             }
         case 1: // Patient
             if let savedPatientEmail = UserDefaults.standard.string(forKey: "PT_Email"),
                let savedPatientPassword = UserDefaults.standard.string(forKey: "PT_Password") {
-                tfNameorID.text = savedPatientEmail
+                tfPhone.text = savedPatientEmail
                 tfPassword.text = savedPatientPassword
                 switchBtnRememberme.isOn = true
             }
@@ -64,8 +64,8 @@ class LoginVC: UIViewController {
 
     // Action for the Login button
     @IBAction func btnLogin(_ sender: UIButton) {
-        guard let nameORid = tfNameorID.text, !nameORid.isEmpty else {
-            showAlert(message: "Email is required")
+        guard let nameORid = tfPhone.text, !nameORid.isEmpty else {
+            showAlert(message: "Phone is required")
             return
         }
 
@@ -79,13 +79,13 @@ class LoginVC: UIViewController {
         // Determine which login process to use based on the segmented control
         if segmentedControl.selectedSegmentIndex == 0 {
             // Doctor login
-            let loginData = DoctorLoginData(email: nameORid, password: password, rememberMe: rememberMe)
+            let loginData = DoctorLoginData(phoneNumber: nameORid, password: password, rememberMe: rememberMe)
             doctorViewModel.login(doctorLoginData: loginData) { result in
                 self.handleLoginResult(result)
             }
         } else {
             // Patient login
-            let loginData = PatientLoginData(email: nameORid, password: password, rememberMe: rememberMe)
+            let loginData = PatientLoginData(phone: nameORid, password: password, rememberMe: rememberMe)
             patientViewModel.login(patientLoginData: loginData) { result in
                 self.handleLoginResult(result)
             }
@@ -97,13 +97,13 @@ class LoginVC: UIViewController {
         case .success(let response):
             if let doctorResponse = response as? DoctorLoginResponse {
                 print("Doctor login successful! Token: \(doctorResponse.token)")
-                UserDefaults.standard.set(doctorResponse.email, forKey: "DREmail")
+                UserDefaults.standard.set(doctorResponse.phoneNumber, forKey: "DR_Phone")
                 UserDefaults.standard.set(doctorResponse.id, forKey: "DR_ID")
                 print(doctorResponse.id)
 
                 // Save email and password if "Remember Me" is enabled for doctor
                 if switchBtnRememberme.isOn {
-                    UserDefaults.standard.set(doctorResponse.email, forKey: "DR_Email")
+                    UserDefaults.standard.set(doctorResponse.phoneNumber, forKey: "DR_Phone")
                     UserDefaults.standard.set(tfPassword.text, forKey: "DR_Password") // Save the password
                 }
 
@@ -118,14 +118,14 @@ class LoginVC: UIViewController {
 
             } else if let patientResponse = response as? PatientLoginResponse {
                 print("Patient login successful! Token: \(patientResponse.token)")
-                UserDefaults.standard.set(patientResponse.email, forKey: "PT_email")
+                UserDefaults.standard.set(patientResponse.phone, forKey: "PT_email")
                 KeychainHelper.shared.saveToken(token: patientResponse.token, forKey: "PT_Token")
                 UserDefaults.standard.set(patientResponse.id, forKey: "PT_ID")
                 print(patientResponse.id)
 
                 // Save patient email and password if "Remember Me" is enabled
                 if switchBtnRememberme.isOn {
-                    UserDefaults.standard.set(patientResponse.email, forKey: "PT_Email")
+                    UserDefaults.standard.set(patientResponse.phone, forKey: "PT_Email")
                     UserDefaults.standard.set(tfPassword.text, forKey: "PT_Password") // Save the password
                 }
 
@@ -154,9 +154,9 @@ class LoginVC: UIViewController {
 
     func updatePlaceholder() {
         if segmentedControl.selectedSegmentIndex == 0 {
-            tfNameorID.placeholder = "Enter email"
+            tfPhone.placeholder = "Enter Phone"
         } else {
-            tfNameorID.placeholder = "Enter email"
+            tfPhone.placeholder = "Enter Phone"
         }
     }
 

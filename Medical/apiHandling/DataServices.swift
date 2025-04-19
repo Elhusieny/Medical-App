@@ -343,14 +343,70 @@ class PostDrWorkingHoursDataService {
                 case .success(let data):
                     if let data = data, let responseString = String(data: data, encoding: .utf8) {
                         completion(.success(responseString))
+                        print("post\(response)")
                     } else {
                         completion(.failure(NSError(domain: "Invalid response", code: 500, userInfo: nil)))
                     }
                 case .failure(let error):
                     completion(.failure(error))
+                    print("error from post\(error)")
                 }
             }
     }
+    // Fetch working days by Doctor ID
+       func fetchDoctorWorkingDays(token: String, doctorId: String, completion: @escaping (Result<[DoctorWorkingDays], Error>) -> Void) {
+           let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek/GetAllDaysOfTheWeekByDoctorId/\(doctorId)"
+           
+           let headers: HTTPHeaders = [
+               "Authorization": "Bearer \(token)"
+           ]
+           
+           AF.request(url, method: .get, headers: headers)
+               .validate()
+               .responseDecodable(of: [DoctorWorkingDays].self) { response in
+                   switch response.result {
+                   case .success(let workingDays):
+                       completion(.success(workingDays))
+                       print(workingDays)
+                   case .failure(let error):
+                       completion(.failure(error))
+                       print(error)
+                   }
+               }
+       }
+
+    func updateDoctorWorkingDays(_ model: DoctorWorkingDays, token: String, completion: @escaping (Result<Void, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/DoctorWorkingDaysOfWeek"
+        
+        // Encode model to JSON
+        guard let jsonData = try? JSONEncoder().encode(model) else {
+            completion(.failure(NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Encoding Failed"])))
+            return
+        }
+        
+        var urlRequest = URLRequest(url: URL(string: url)!)
+        urlRequest.method = .put
+        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // ✅ Add Authorization Header
+        urlRequest.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        
+        urlRequest.httpBody = jsonData
+
+        AF.request(urlRequest)
+            .validate(statusCode: 200..<300) // Accept 2xx
+            .response { response in
+                switch response.result {
+                case .success:
+                    completion(.success(()))
+                    print("✅ Success: \(response)")
+                case .failure(let error):
+                    completion(.failure(error))
+                    print("❌ Error: \(error)")
+                }
+            }
+    }
+
 }
 
 class GetAllStoredWorkingTimesDataService {
@@ -545,3 +601,44 @@ class PrescriptionService {
     }
 }
 
+
+class PatientBookingService {
+    static let shared = PatientBookingService()
+
+    private init() {}
+
+    func getAllPatientsBooking(doctorId: String, completion: @escaping (Result<[PatientBooking], Error>) -> Void) {
+        // Get the token from UserDefaults
+        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
+                   completion(.failure(NSError(domain: "No Token Found", code: 401)))
+                   return
+               }
+
+
+        // URL setup
+        let urlString = "http://158.220.90.131:44500/api/PatientBooking/GetAllPatientsBookingToDoctorByDoctorId/\(doctorId)"
+        print("Request URL: \(urlString)")
+        print("Token: \(token)")
+
+        // Headers setup
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(token)",
+            "Accept": "application/json"
+        ]
+        // API Request
+        AF.request(urlString, method: .get, headers: headers)
+            .validate()
+            .responseDecodable(of: [PatientBooking].self) { response in
+                // 👇 Print the status code
+                      if let statusCode = response.response?.statusCode {
+                          print("Status code:", statusCode)
+                      }
+                switch response.result {
+                case .success(let bookings):
+                    completion(.success(bookings))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
+}

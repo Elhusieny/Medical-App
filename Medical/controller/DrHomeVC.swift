@@ -65,7 +65,7 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
         case "Add Prescription":
             navigateToSwiftUIScreen()
         case "Reservations":
-            navigateToViewController(withIdentifier: "ReservationsVC")
+            navigateToDrReservations()
         case "Working Times":
             navigateToViewController(withIdentifier: "drworkingtimes")
         case "History":
@@ -84,6 +84,11 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
     private func navigateToRoshetaHistoryScreen() {
         let roshetaHistory = RoshetaHistoryScreen()
         let hostingController = UIHostingController(rootView: roshetaHistory)
+        navigationController?.pushViewController(hostingController, animated: true)
+    }
+    private func navigateToDrReservations() {
+        let doctorReservations = GetDoctorReservations(doctorId: UserDefaults.standard.string(forKey: "DR_ID") ?? "")
+        let hostingController = UIHostingController(rootView: doctorReservations)
         navigationController?.pushViewController(hostingController, animated: true)
     }
     private func navigateToSwiftUIScreen() {

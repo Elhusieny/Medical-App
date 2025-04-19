@@ -11,31 +11,36 @@ class DateCollectionViewCell: UICollectionViewCell {
             }
         }
         
-    let dateLabel1: UILabel = {
-           let label = UILabel()
-           label.translatesAutoresizingMaskIntoConstraints = false
-           label.font = UIFont.systemFont(ofSize: 14)
-           label.textColor = .black
-           return label
-       }()
-    
-    func configure(with date: String) {
-        dateLabel.text = date
-    }
-    
-    func setupUI() {
-        self.contentView.layer.cornerRadius = 10 // Set the desired radius
-        self.contentView.layer.masksToBounds = true
-        // Set border properties
-        self.contentView.layer.borderWidth = 2.0 // Set the desired border width
-            self.contentView.layer.borderColor = UIColor.white.cgColor // Set the desired border color
-    }
-    func highlight() {
-           self.contentView.backgroundColor = UIColor.lightGray // Change to desired highlight color
-       }
 
-       func unhighlight() {
-           self.contentView.backgroundColor = UIColor.clear // Change to your original background color
-       }
-}
-   
+        func configure(with date: String) {
+            dateLabel.text = date
+        }
+
+        func setupUI() {
+            contentView.layer.cornerRadius = 10
+                contentView.layer.masksToBounds = true
+
+                // 1) Set the deep-red background
+                contentView.backgroundColor = UIColor(red: 139/255,
+                                                      green:   0/255,
+                                                      blue:    0/255,
+                                                      alpha: 1)
+
+                // 2) If you still want a border, you can match it or choose a contrasting color:
+                contentView.layer.borderWidth  = 1.5
+                contentView.layer.borderColor  = UIColor.white.cgColor
+            dateLabel.textColor = .white
+            dateLabel.font = UIFont.boldSystemFont(ofSize: 15)
+            dateLabel.textAlignment = .center
+        }
+        
+        func highlight() {
+            contentView.backgroundColor = UIColor.systemRed
+            dateLabel.textColor = .white
+        }
+
+        func unhighlight() {
+            contentView.backgroundColor = UIColor(named: "CellBackground") ?? UIColor.black
+            dateLabel.textColor = .white
+        }
+    }

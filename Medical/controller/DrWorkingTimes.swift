@@ -6,7 +6,9 @@ class DrWorkingTimes: UIViewController {
     let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     var selectedDays: [String] = []
     var workingHours: [String: (startTime: Date, endTime: Date)] = [:]
-    
+    var existingWorkingDayId: Int? = nil
+    var existingWorkingTimes: [DoctorWorkingDays] = []  // Store fetched working times
+    var selectedWorkingDay: DoctorWorkingDays?
     // Assuming you have linked buttons from the storyboard
     @IBOutlet weak var mondayButton: UIButton!
     @IBOutlet weak var tuesdayButton: UIButton!
@@ -15,7 +17,8 @@ class DrWorkingTimes: UIViewController {
     @IBOutlet weak var fridayButton: UIButton!
     @IBOutlet weak var saturdayButton: UIButton!
     @IBOutlet weak var sundayButton: UIButton!
-    let helperFunctions=HelperFunctions()
+    
+    let helperFunctions = HelperFunctions()
     
     @IBOutlet weak var btnSubmitWorkintTimes: UIButton!
     @IBOutlet weak var btnShowSchedule: UIButton!
@@ -25,22 +28,31 @@ class DrWorkingTimes: UIViewController {
         super.viewDidLoad()
         self.title = "Working Times"
         
-        // Create a back button with SF Symbol and black tint
+        // Setup the back button and other UI elements
+        setupNavigationBar()
+        
+        // Configure buttons
+        configureButtons()
+
+        // Fetch existing working days
+        fetchExistingWorkingTimes()
+        
+    }
+
+    func setupNavigationBar() {
         let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
         let backButton = UIButton(type: .system)
         backButton.setImage(backImage, for: .normal)
         backButton.setTitle(" Back", for: .normal)
         backButton.tintColor = .black
         backButton.setTitleColor(.black, for: .normal)
-        // 💪 Set bold system font
         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
         backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
         
         let backBarButtonItem = UIBarButtonItem(customView: backButton)
         navigationItem.leftBarButtonItem = backBarButtonItem
-        
-        configureButtons()
     }
+
     @objc func backTapped() {
         navigationController?.popViewController(animated: true)
     }
@@ -53,7 +65,7 @@ class DrWorkingTimes: UIViewController {
         
         for (index, button) in buttons.enumerated() {
             let dayTitle = shortDayTitles[index]
-            let icon = UIImage(systemName: "calendar") // Or any other image you prefer
+            let icon = UIImage(systemName: "calendar")
             helperFunctions.setIconButton2(for: button, withImage: icon, title: dayTitle)
             styleAsWorkingTimeButton(button)
         }
@@ -62,8 +74,62 @@ class DrWorkingTimes: UIViewController {
         styleAsWorkingTimeButton(btnShowSchedule)
     }
     
-    
-    
+    func styleAsWorkingTimeButton(_ button: UIButton) {
+        button.setTitleColor(.white, for: .normal)
+        button.layer.borderWidth = 2
+        button.layer.borderColor = UIColor.white.cgColor
+        button.backgroundColor = UIColor(red: 139/255, green: 0, blue: 0, alpha: 1)
+        button.layer.cornerRadius = 20
+        button.tintColor = .white
+    }
+
+    // Fetch existing working times
+    func fetchExistingWorkingTimes() {
+        guard let doctorId = UserDefaults.standard.string(forKey: "DR_ID") else { return }
+        guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else { return }
+
+        viewModel.fetchWorkingDays(token: token, doctorId: doctorId) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let fetchedWorkingDays):
+                    self.existingWorkingTimes = fetchedWorkingDays
+                    
+                    // ✅ THIS PART IS VERY IMPORTANT
+                    if let firstWorkingDay = fetchedWorkingDays.first {
+                        self.existingWorkingDayId = firstWorkingDay.id
+                        print("Fetched Existing Working Day ID: \(String(describing: self.existingWorkingDayId))")
+                    } else {
+                        print("No existing working day found.")
+                    }
+                    
+                case .failure(let error):
+                    print("Failed fetching working times: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    func loadExistingWorkingTimesIntoUI() {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "HH:mm:ss"  // Updated to 24-hour format
+
+        for day in existingWorkingTimes {
+            if let startTime = dateFormatter.date(from: day.sunDayFrom ?? ""),
+               let endTime = dateFormatter.date(from: day.sunDayTo ?? "") {
+                workingHours["Sunday"] = (startTime, endTime)
+            }
+            // Repeat for other days...
+
+            // Mark selected days
+            if workingHours["Sunday"] != nil {
+                selectedDays.append("Sunday")
+                // Update the button UI for Sunday (color change, etc.)
+                sundayButton.layer.borderColor = UIColor.systemGreen.cgColor
+                sundayButton.setTitleColor(.systemGreen, for: .normal)
+            }
+        }
+    }
+
     @IBAction func toggleDaySelection(_ sender: UIButton) {
         let day = daysOfWeek[sender.tag]
         
@@ -78,20 +144,7 @@ class DrWorkingTimes: UIViewController {
             showTimePicker(for: day)
         }
     }
-    
-    
-    
-    func styleAsWorkingTimeButton(_ button: UIButton) {
-        button.setTitleColor(.white, for: .normal)
-        button.layer.borderWidth = 2
-        button.layer.borderColor = UIColor.white.cgColor
-        button.backgroundColor = UIColor(red: 139/255, green: 0, blue: 0, alpha: 1)
-        button.layer.cornerRadius = 20
-        button.tintColor = .white
-        
-        
-    }
-    
+
     func showTimePicker(for day: String) {
         let alertController = UIAlertController(title: "Select Working Hours for \(day)", message: "\n\n\n\n\n\n\n", preferredStyle: .alert)
         
@@ -172,53 +225,72 @@ class DrWorkingTimes: UIViewController {
         
         self.present(alertController, animated: true, completion: nil)
     }
-    
     @IBAction func showSchedule() {
-        var schedule = ""
-        for day in selectedDays {
-            if let times = workingHours[day] {
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "hh:mm a"
-                let startTimeString = dateFormatter.string(from: times.startTime)
-                let endTimeString = dateFormatter.string(from: times.endTime)
-                schedule += "\(day): \(startTimeString) - \(endTimeString)\n"
-            }
-        }
-        let alert = UIAlertController(title: "Doctor's Schedule", message: schedule.isEmpty ? "No schedule selected" : schedule, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        present(alert, animated: true, completion: nil)
-    }
-    
-    @IBAction func submitWorkingTimes() {
-           if let doctorId = UserDefaults.standard.string(forKey: "DR_ID") {
-               print("Doctor ID: \(doctorId)")
-               
-               viewModel.prepareWorkingTimesData(selectedDays: workingHours, doctorId: doctorId)
-               viewModel.postWorkingTimes { result in
-                   DispatchQueue.main.async { // Ensure UI updates are on the main thread
-                       switch result {
-                       case .success(let response):
-                           print("Success: \(response)")
-                           // Show success message
-                           let successAlert = UIAlertController(title: "Success", message: response, preferredStyle: .alert)
-                           successAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                           self.present(successAlert, animated: true, completion: nil)
-                           
-                       case .failure(let error):
-                           print("Error: \(error.localizedDescription)")
-                           // Show error message
-                           let errorAlert = UIAlertController(title: "Error", message: "Failed to submit working times: \(error.localizedDescription)", preferredStyle: .alert)
-                           errorAlert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                           self.present(errorAlert, animated: true, completion: nil)
-                       }
-                   }
+           var schedule = ""
+           for day in selectedDays {
+               if let times = workingHours[day] {
+                   let dateFormatter = DateFormatter()
+                   dateFormatter.dateFormat = "hh:mm a"
+                   let startTimeString = dateFormatter.string(from: times.startTime)
+                   let endTimeString = dateFormatter.string(from: times.endTime)
+                   schedule += "\(day): \(startTimeString) - \(endTimeString)\n"
                }
-           } else {
-               print("Doctor ID not found in UserDefaults")
-               // Optionally show an alert if the doctor ID is not found
-               let alert = UIAlertController(title: "Error", message: "Doctor ID not found. Please log in again.", preferredStyle: .alert)
-               alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-               present(alert, animated: true, completion: nil)
            }
+           let alert = UIAlertController(title: "Doctor's Schedule", message: schedule.isEmpty ? "No schedule selected" : schedule, preferredStyle: .alert)
+           alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+           present(alert, animated: true, completion: nil)
        }
-   }
+       
+    @IBAction func submitWorkingTimes() {
+          guard let doctorId = UserDefaults.standard.string(forKey: "DR_ID") else {
+              showAlert(title: "Error", message: "Doctor ID not found. Please log in again.")
+              return
+          }
+          print("Working hours before submission: \(workingHours)")
+          print("Existing Working Day ID: \(String(describing: existingWorkingDayId))")
+
+          // Prepare the data for posting or updating (working hours and the doctor ID)
+          viewModel.prepareWorkingTimesData(selectedDays: workingHours, doctorId: doctorId, existingModelId: existingWorkingDayId)
+          
+          // Check if we are updating or creating new working times
+          if let existingWorkingDayId = existingWorkingDayId {
+              // If there's an existing working day, update it
+              print("Updating existing working times with ID: \(existingWorkingDayId)")
+              viewModel.updateWorkingTimes { result in
+                  DispatchQueue.main.async {
+                      switch result {
+                      case .success(let message):
+                          self.showAlert(title: "Success put", message: message)
+                          print(message)
+                          // Optionally, refresh UI with the updated working times
+                      case .failure(let error):
+                          self.showAlert(title: "Error", message: "Failed to update working times: \(error.localizedDescription)")
+                          print(error)
+
+                      }
+                  }
+              }
+          } else {
+              // If there's no existing working day ID, create new working times
+              print("Creating new working times.")
+              viewModel.postWorkingTimes { result in
+                  DispatchQueue.main.async {
+                      switch result {
+                      case .success(let message):
+                          self.showAlert(title: "Success post", message: message)
+                          // Optionally, refresh UI with the new working times
+                      case .failure(let error):
+                          self.showAlert(title: "Error", message: "Failed to create working times: \(error.localizedDescription)")
+                      }
+                  }
+              }
+          }
+      }
+
+
+    private func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+}
