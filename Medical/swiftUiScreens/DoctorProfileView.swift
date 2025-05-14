@@ -1,7 +1,9 @@
+
+
 import SwiftUI
 
 struct DoctorProfileView: View {
-    @StateObject var viewModel = DoctorProfileViewModel()
+    @StateObject var viewModel = DoctorDataViewModel()
     
     @State private var showImagePicker = false
     @State private var showAlert = false
@@ -56,12 +58,14 @@ struct DoctorProfileView: View {
         }
         .navigationTitle("Edit Profile")
         .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 BackButton()
             }
         }
     }
+    
     
     private var profileImageView: some View {
         Group {
@@ -89,13 +93,16 @@ struct DoctorProfileView: View {
     }
 
     private func loadData() {
+        guard let username = UserDefaults.standard.string(forKey: "DR_Name")
+        else{return }
+
         guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
             alertMessage = "User not logged in."
             showAlert = true
             return
         }
 
-        viewModel.fetchProfile(token: token) { error in
+        viewModel.fetchDoctorData(token: token) {error in
             if let error = error {
                 alertMessage = error
                 showAlert = true
@@ -150,7 +157,7 @@ struct DoctorProfileView: View {
             viewModel.putProfile?.image = imageData
         }
 
-        viewModel.updateProfileWithImage(token: token) { error in
+        viewModel.updateDoctorProfile(token: token) { error in
             alertMessage = error ?? "Profile updated successfully!"
             showAlert = true
         }

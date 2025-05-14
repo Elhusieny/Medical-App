@@ -9,6 +9,12 @@ struct GetDoctorReservations: View {
     var body: some View {
         NavigationStack {
             VStack {
+                if viewModel.patientBookings.isEmpty && viewModel.errorMessage == nil {
+                    Text("No reservations found.")
+                        .foregroundColor(.gray)
+                        .padding()
+                }
+                
                 if let errorMessage = viewModel.errorMessage {
                     Text(errorMessage)
                         .foregroundColor(.red)
@@ -19,14 +25,17 @@ struct GetDoctorReservations: View {
                             .font(.headline)
                         Text("Interval Start: \(booking.intervalStart)")
                             .font(.subheadline)
+                        Text("Bookings Count: \(viewModel.patientBookings.count)")
+                            .foregroundColor(.gray)
                     }
                     .foregroundColor(.white)
-                    .padding()
+                    .padding(10)                          // uniform 10pt padding
+                    .frame(maxWidth: .infinity, alignment: .leading) // stretch full width
                     .background(darkRed)
                     .cornerRadius(12)
-                    .listRowBackground(Color.clear) // Ensures no default row background
+                    .listRowBackground(Color.clear)
                 }
-                .listStyle(.plain) // Clean list style with no extra separators
+                .listStyle(.plain)
             }
             .onAppear {
                 viewModel.fetchPatientBookings(for: doctorId)

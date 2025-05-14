@@ -14,20 +14,7 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        
-//        // Create a back button with SF Symbol and black tint
-//        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
-//        let backButton = UIButton(type: .system)
-//        backButton.setImage(backImage, for: .normal)
-//        backButton.setTitle(" Back", for: .normal)
-//        backButton.tintColor = .black
-//        backButton.setTitleColor(.black, for: .normal)
-//     // 💪 Set bold system font
-//         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-//        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
-//
-//        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-//        navigationItem.leftBarButtonItem = backBarButtonItem
+
         self.navigationItem.hidesBackButton = true
 
         collectionView.dataSource = handler
@@ -165,7 +152,7 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
     @objc private func profileButtonTapped() {
         // Handle profile button tap
         print("Profile tapped")
-        openProfile()
+        openProfileSwiftUI()
     }
     
     @objc private func notificationsButtonTapped() {
@@ -188,7 +175,11 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
         
         
     }
-    
+    @objc private func openProfileSwiftUI() {
+        let profileView = DoctorProfileView()
+        let hostingController = UIHostingController(rootView: profileView)
+        self.navigationController?.pushViewController(hostingController, animated: true)
+    }
     // MARK: - Open Appointments
     private func openAppointments() {
         // Navigate to the appointments screen (implement navigation here)
@@ -226,4 +217,6 @@ class DrHomeVC: UIViewController, DrHomeCollectionViewHandlerDelegate {
 //    @objc func backTapped() {
 //        navigationController?.popViewController(animated: true)
 //    }
+    
+    
 }

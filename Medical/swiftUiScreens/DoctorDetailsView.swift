@@ -1,4 +1,5 @@
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct DoctorDetailsView: View {
     let doctorName: String
@@ -15,15 +16,27 @@ struct DoctorDetailsView: View {
             VStack(spacing: 16) {
                 // Doctor info section with image card and corner radius
                 Spacer()
-                VStack(alignment: .leading, spacing: 8) {
-                    HStack {
-                        Image(doctorImage) // Assuming doctor image is added to assets or comes from URL
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 80, height: 80)
-                            .clipShape(Circle())
-                            .overlay(Circle().stroke(Color.white, lineWidth: 4))
-                            .shadow(radius: 4)
+                VStack(spacing: 16) {
+                               // Doctor info section with image card and corner radius
+                               Spacer()
+                               VStack(alignment: .leading, spacing: 8) {
+                                   HStack {
+                                       // Use SDWebImage for the doctor image here
+                                       if let url = URL(string: doctorImage) {
+                                           // Using SDWebImageSwiftUI to load and cache the image
+                                           WebImage(url: url)
+                                               .onSuccess { image, data, cacheType in
+                                                   // Image loaded successfully
+                                               }
+                                               .resizable()
+                                               .scaledToFill()
+                                               .frame(width: 80, height: 80)
+                                               .clipShape(Circle())
+                                               .overlay(Circle().stroke(Color.white, lineWidth: 4))
+                                               .shadow(radius: 4)
+                                       }
+                                   }
+
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text(doctorName)
@@ -117,7 +130,7 @@ struct DoctorDetailsView: View {
                         return
                     }
                     
-                    viewModel.bookAppointment(token: token, patientId: patientId) { success in
+                    viewModel.bookAppointment(token: token, patientId: patientId,doctorId: doctorId) { success in
                         bookingSuccess = success
                         showBookingAlert = true
                     }
@@ -144,7 +157,7 @@ struct DoctorDetailsView: View {
             }
             
             .onAppear {
-                if let token = KeychainHelper.shared.getToken(forKey: "DR_Token") {
+                if let token = KeychainHelper.shared.getToken(forKey: "PT_Token") {
                     viewModel.fetchDoctorTimes(token: token, doctorId: doctorId) {
                         print("Fetched Times: \(viewModel.availableTimes.map(\.intervalStart))")
                         print("Available Dates: \(viewModel.availableDates)")

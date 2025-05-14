@@ -86,18 +86,19 @@ class DrProfileDataVC: UIViewController {
     }
 
     func fetchDoctorData(token: String) {
-            viewModel.fetchDoctorData(token: token) {
-                DispatchQueue.main.async {
-                    if let error = self.viewModel.error {
-                        self.showAlert(message: "Error: \(error)")
-                        print(error)
-                    } else if let doctor = self.viewModel.doctor {
-                        self.updateUI(with: doctor)
-                        print(doctor.specialization)
-                    }
+        viewModel.fetchDoctorData(token: token) { [weak self] error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.showAlert(message: "Error: \(error)")
+                    print(error)
+                } else if let doctor = self?.viewModel.doctor {
+                    self?.updateUI(with: doctor)
+                    print(doctor.specialization)
                 }
             }
         }
+    }
+
 
         func updateUI(with doctor: DoctorData) {
             // Set the text fields' text to the doctor's information

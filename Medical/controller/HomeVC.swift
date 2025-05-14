@@ -9,19 +9,7 @@ class HomeVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title="Home"
-        // Create a back button with SF Symbol and black tint
-//        let backImage = UIImage(systemName: "chevron.left")?.withRenderingMode(.alwaysTemplate)
-//        let backButton = UIButton(type: .system)
-//        backButton.setImage(backImage, for: .normal)
-//        backButton.setTitle(" Back", for: .normal)
-//        backButton.tintColor = .black
-//        backButton.setTitleColor(.black, for: .normal)
-//     // 💪 Set bold system font
-//         backButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-//        backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
-//
-//        let backBarButtonItem = UIBarButtonItem(customView: backButton)
-//        navigationItem.leftBarButtonItem = backBarButtonItem
+ 
         self.navigationItem.hidesBackButton = true
 
         collectionViewHandler = DoctorsCollectionViewHandler(viewModel: viewModel)
@@ -33,11 +21,12 @@ class HomeVC: UIViewController {
             guard let self = self else { return }
 
             let swiftUIView = DoctorDetailsView(
-                doctorName: selectedDoctor.userName,
-                specialization: selectedDoctor.specialization,
-                doctorId: selectedDoctor.id ,
-                doctorImage: "doc2" // Replace with the actual image name or URL
+                doctorName: selectedDoctor.userName ?? "",
+                specialization: selectedDoctor.specialization ?? "",
+                doctorId: selectedDoctor.id ?? "" ,
+                doctorImage: selectedDoctor.imagePath ?? "" // Replace with the actual image name or URL
 )
+            self.navigationItem.hidesBackButton = true
 
             let hostingController = UIHostingController(rootView: swiftUIView)
             self.navigationController?.pushViewController(hostingController, animated: true)
@@ -47,9 +36,7 @@ class HomeVC: UIViewController {
 
         fetchDoctors()
     }
-//    @objc func backTapped() {
-//        navigationController?.popViewController(animated: true)
-//    }
+
 
     
     func fetchDoctors() {
@@ -59,6 +46,7 @@ class HomeVC: UIViewController {
                 if success {
                     DispatchQueue.main.async {
                         self.collectionView.reloadData()
+                        
                     }
                 } else {
                     print("Failed to fetch doctors.")
@@ -146,13 +134,21 @@ class HomeVC: UIViewController {
     @objc private func profileButtonTapped() {
         // Handle profile button tap
         print("Profile tapped")
-        openProfile()
+        //openProfile()
+        openProfileSwiftUI()
     }
     
     @objc private func notificationsButtonTapped() {
         // Handle notifications button tap
         print("Notifications tapped")
         openNotifications()
+        
+    }
+    
+    @objc private func openProfileSwiftUI() {
+        let profileView = PatientProfileView()
+        let hostingController = UIHostingController(rootView: profileView)
+        self.navigationController?.pushViewController(hostingController, animated: true)
     }
     
     // MARK: - Open Profile

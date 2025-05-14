@@ -14,7 +14,7 @@ struct DataServiceDrRegister {
 let doctorRegisterUrl = URLS.doctorRegisterUrl
     
     // MARK: - Services
-    func registerDoctor(doctorData: PostDoctorData, completion: @escaping (Bool, Error?) -> ()) {
+    func registerDoctor(doctorData: PostDoctorData,imageData:Data?, completion: @escaping (Bool, Error?) -> ()) {
         //completion hander is the return from a server api ,error or success..
         let url = doctorRegisterUrl
         
@@ -29,35 +29,32 @@ let doctorRegisterUrl = URLS.doctorRegisterUrl
             "confirmPassword": doctorData.confirmPassword
         ]
         
-        // Send the request using AF.request
-        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseData { response in
-            switch response.result {
-            case .success(let data):
-                do {
-                    // Try to parse the response data into a JSON object
-                    if try JSONSerialization.jsonObject(with: data, options: []) is [String: Any] {
-                        if response.response?.statusCode == 200 {
-                            completion(true, nil)
-                        } else {
-                            let errorMessage = "Server returned status code: \(response.response?.statusCode ?? 0)"
-                            let customError = NSError(domain: "", code: response.response?.statusCode ?? 0, userInfo: [NSLocalizedDescriptionKey: errorMessage])
-                            completion(false, customError)
-                        }
-
-                    } else {
-                        // Invalid response format
-                        completion(false, nil)
-                    }
-                } catch let jsonError {
-                    // Error parsing JSON
-                    completion(false, jsonError)
+        
+        // Send the request using Alamofire's multipartFormData
+        AF.upload(multipartFormData: { multipartFormData in
+            // Append image data if available
+            if let imageData = imageData {
+                multipartFormData.append(imageData, withName: "image", fileName: "profile.jpg", mimeType: "image/jpeg")
+            }
+            // Append other form parameters
+            for (key, value) in parameters {
+                if let stringValue = value as? String {
+                    multipartFormData.append(stringValue.data(using: .utf8)!, withName: key)
                 }
+            }
+        }, to: url)
+        .response { response in
+            print("Doctor signup response status code:\(response.response?.statusCode ?? 0)")
+            switch response.result {
+            case .success:
+                completion(true, nil)
             case .failure(let error):
-                // Network or server error
                 completion(false, error)
             }
         }
     }
+                  
+                  
 }
 
 struct DoctorLoginDataService {
@@ -117,6 +114,8 @@ class GetAllDoctorsDataServices {
             .responseDecodable(of: [Doctors].self) { response in
                 switch response.result {
                 case .success(let doctors):
+                    print(response.result)
+                    print(doctors)
                     completion(.success(doctors))
                 case .failure(let error):
                     completion(.failure(error))
@@ -154,16 +153,17 @@ struct GetAllPatientsDataServices
 struct GetDoctorDataService {
     static let shared = GetDoctorDataService()
     private init() {}
-    
+    let userName = UserDefaults.standard.string(forKey: "DR_Name")
     func fetchDoctorData(token: String, completion: @escaping (Result<DoctorData, Error>) -> Void) {
         // Retrieve userName from UserDefaults
-        let userName = UserDefaults.standard.string(forKey: "DR_Name")
         guard let userName = userName else {
             // Handle the case where userName is not available
             print("No userName found in UserDefaults")
             completion(.failure(NSError(domain: "", code: 0, userInfo: [NSLocalizedDescriptionKey: "No userName found"])))
             return
         }
+        print("Doctor Name:\(userName)")
+
         
         // Form the URL
         let urlString = "\(URLS.getDoctorData)\(userName)"
@@ -182,6 +182,7 @@ struct GetDoctorDataService {
         AF.request(url, method: .get, headers: headers)
             .validate()
             .responseDecodable(of: DoctorData.self) { response in
+                print("Status code fetchDoctorData:\(response.response?.statusCode ?? 0)")
                 switch response.result {
                 case .success(let doctorData):
                     completion(.success(doctorData))
@@ -190,34 +191,46 @@ struct GetDoctorDataService {
                 }
             }
     }
-    func updateDoctorProfile(token: String, updatedDoctor: UpdateDoctorProfileRequest, completion: @escaping (String?) -> Void) {
-        let url = "http://158.220.90.131:44500/api/Doctors/ramy"
+    func updateDoctorProfile( token: String, updatedDoctor: UpdateDoctorProfileRequest, completion: @escaping (Result<Bool, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/Doctors/\(updatedDoctor.userName)"
         let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(token)",
-            "Content-Type": "application/json"
+            "Authorization": "Bearer \(token)"
         ]
         
-        AF.request(url, method: .put, parameters: updatedDoctor, encoder: JSONParameterEncoder.default, headers: headers).response { response in
+        AF.upload(multipartFormData: { formData in
+            formData.append((updatedDoctor.specialization).data(using: .utf8) ?? Data(), withName: "specialization")
+            formData.append((updatedDoctor.userName).data(using: .utf8) ?? Data(), withName: "userName")
+            formData.append((updatedDoctor.email).data(using: .utf8) ?? Data(), withName: "email")
+            formData.append((updatedDoctor.phone).data(using: .utf8) ?? Data(), withName: "phone")
+            formData.append((updatedDoctor.address).data(using: .utf8) ?? Data(), withName: "address")
+            formData.append((updatedDoctor.password).data(using: .utf8) ?? Data(), withName: "password")
+            formData.append((updatedDoctor.confirmPassword).data(using: .utf8) ?? Data(), withName: "confirmPassword")
+            formData.append((updatedDoctor.medicineDescriptions ?? "").data(using: .utf8) ?? Data(), withName: "medicineDescriptions")
+            formData.append((updatedDoctor.doctorWorkingTime ?? "").data(using: .utf8) ?? Data(), withName: "doctorWorkingTime")
+            formData.append((updatedDoctor.doctorWorkingDaysOfWeek ?? "").data(using: .utf8) ?? Data(), withName: "doctorWorkingDaysOfWeek")
+            
+            if let imageData = updatedDoctor.image {
+                formData.append(imageData, withName: "image", fileName: "profile.jpg", mimeType: "image/jpeg")
+            }
+        }, to: url, method: .put, headers: headers)
+        .validate()
+        .response { response in
             switch response.result {
             case .success:
-                completion(nil)
+                completion(.success(true))
             case .failure(let error):
-                completion(error.localizedDescription)
+                completion(.failure(error))
             }
         }
     }
 }
 struct PostPatientRegisterDataService {
-    // MARK: - Singleton
     static let shared = PostPatientRegisterDataService()
-
-    // MARK: - Register Patient
-    func registerPatient(patientData: PostPatientData, completion: @escaping (Bool, Error?) -> ()) {
-        // Define the URL for patient registration
+    
+    func registerPatient(patientData: PostPatientData, imageData: Data?, completion: @escaping (Bool, Error?) -> ()) {
         let url = URLS.patientRegisterUrl
         
-        // Convert the patientData to a dictionary to send in the request
-        let parameters: [String: Any] = [
+        var parameters: [String: Any] = [
             "userName": patientData.userName,
             "nationalID": patientData.nationalID,
             "email": patientData.email,
@@ -232,35 +245,33 @@ struct PostPatientRegisterDataService {
             "confirmPassword": patientData.confirmPassword
         ]
         
-        // Send the request using AF.request
-        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default).responseData { response in
-            switch response.result {
-            case .success(let data):
-                do {
-                    // Try to parse the response data into a JSON object
-                    if try JSONSerialization.jsonObject(with: data, options: []) is [String: Any] {
-                        if response.response?.statusCode == 200 {
-                            // Successfully registered patient
-                            completion(true, nil)
-                        } else {
-                            // Server error occurred, but response was received
-                            completion(false, nil)
-                        }
-                    } else {
-                        // Invalid response format
-                        completion(false, nil)
-                    }
-                } catch let jsonError {
-                    // Error parsing JSON
-                    completion(false, jsonError)
+        // Send the request using Alamofire's multipartFormData
+        AF.upload(multipartFormData: { multipartFormData in
+            // Append image data if available
+            if let imageData = imageData {
+                multipartFormData.append(imageData, withName: "image", fileName: "profile.jpg", mimeType: "image/jpeg")
+            }
+            
+            // Append other form parameters
+            for (key, value) in parameters {
+                if let stringValue = value as? String {
+                    multipartFormData.append(stringValue.data(using: .utf8)!, withName: key)
                 }
+            }
+        }, to: url)
+        .response { response in
+            switch response.result {
+            case .success:
+                completion(true, nil)
             case .failure(let error):
-                // Network or server error
                 completion(false, error)
             }
         }
     }
+
 }
+
+
 struct PatientLoginDataService {
     
     // Singleton instance for shared login service
@@ -280,6 +291,7 @@ struct PatientLoginDataService {
         AF.request(patientLoginUrl, method: .post, parameters: patientLoginData, encoder: JSONParameterEncoder.default, headers: headers)
             .validate()
             .responseDecodable(of: PatientLoginResponse.self) { response in
+                print("patient login status code:\(response.response?.statusCode ?? 0)")
                 switch response.result {
                 case .success(let patientResponse):
                     // Return the successful response
@@ -439,9 +451,9 @@ class GetAllStoredWorkingTimesDataService {
 }
 class DataServices {
     static let shared = DataServices()
-
+    
     private init() {}
-
+    
     // Function to fetch doctor times
     func fetchDoctorTimes(token: String, doctorId: String, completion: @escaping ([ResultInterval]?, Error?) -> Void) {
         // Set up the headers with the token
@@ -452,7 +464,7 @@ class DataServices {
         
         
         let url = "http://158.220.90.131:44500/api/DoctorWorkingTime/\(doctorId)/AllStoredWorkingTimes"
-
+        
         AF.request(url, headers: headers).responseDecodable(of: SortedTimeInterval.self) { response in
             if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
                 print("Raw response data: \(jsonString)")
@@ -466,41 +478,45 @@ class DataServices {
             }
         }
     }
-
+    
     // Function to book an appointment
     func bookAppointment(token: String, bookDate: BookDate, completion: @escaping (Bool, Error?) -> Void) {
-        // Set up the headers with the token
         let headers: HTTPHeaders = [
-            "Authorization": "Bearer \(token)", // Sending the token in the Authorization header
+            "Authorization": "Bearer \(token)",
+            "Content-Type": "application/json",    // make sure to set JSON content type
             "Accept": "application/json"
         ]
-        
-        
+
         let url = "http://158.220.90.131:44500/api/PatientBooking"
-        let parameters: [String: Any] = [
-            "patientId": bookDate.patientId,
-            "doctorTimeIntervalId": bookDate.doctorTimeIntervalId
-        ]
-        
-        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).response { response in
-            switch response.result {
-            case .success:
-                completion(true, nil)
-            case .failure(let error):
-                completion(false, error)
+
+        AF.request(
+            url,
+            method: .post,
+            parameters: bookDate,
+            encoder: JSONParameterEncoder.default,   // ← use the Codable struct directly
+            headers: headers
+        )
+        .validate()
+        .response { response in
+            // log raw response
+            if let data = response.data, let body = String(data: data, encoding: .utf8) {
+                print("⚙️ response body: \(body)")
             }
+            completion(response.error == nil, response.error)
         }
     }
+
     
-    func getPatientProfile(id: String, token: String, completion: @escaping (Result<PatientProfile, Error>) -> Void) {
+    func getPatientProfile(id: String, token: String, completion: @escaping (Result<GetPatientProfileData, Error>) -> Void) {
         let url = "http://158.220.90.131:44500/api/Patients/\(id)"
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(token)"
         ]
-        
         AF.request(url, method: .get, headers: headers)
             .validate()
-            .responseDecodable(of: PatientProfile.self) { response in
+            .responseDecodable(of: GetPatientProfileData.self) { response in
+                let statusCode=response.response?.statusCode ?? 0
+                print("status\(statusCode)")
                 switch response.result {
                 case .success(let profile):
                     completion(.success(profile))
@@ -509,44 +525,68 @@ class DataServices {
                 }
             }
     }
-    func updatePatientProfile(id: String, updatedProfile: UpdatePatientProfileRequest, token: String, completion: @escaping (Result<Bool, Error>) -> Void) {
-            let url = "http://158.220.90.131:44500/api/Patients/\(id)"
-            let headers: HTTPHeaders = [
-                "Authorization": "Bearer \(token)",
-                "Content-Type": "application/json"
-            ]
-            
-            AF.request(url, method: .put, parameters: updatedProfile, encoder: JSONParameterEncoder.default, headers: headers)
-                .validate()
-                .response { response in
-                    switch response.result {
-                    case .success:
-                        completion(.success(true))
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-                }
-        }
     
-    func fetchPatient(byCode code: Int, token: String, completion: @escaping (Result<Patient, Error>) -> Void) {
-            let url = "http://158.220.90.131:44500/api/Patients/GePatientByCode/\(code)"
+    func updatePatientProfileWithImage(_ profile: UpdatePatientProfileRequest, token: String, completion: @escaping (Result<Bool, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/Patients/\(profile.id)"
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(token)"
+        ]
+        
+        AF.upload(multipartFormData: { formData in
+            formData.append((profile.nationalID).data(using: .utf8) ?? Data(), withName: "nationalID")
+            formData.append(String(profile.patientCode).data(using: .utf8) ?? Data(), withName: "patientCode")
+            formData.append((profile.userName).data(using: .utf8) ?? Data(), withName: "userName")
+            formData.append((profile.email).data(using: .utf8) ?? Data(), withName: "email")
+            formData.append((profile.phone).data(using: .utf8) ?? Data(), withName: "phone")
+            formData.append((profile.address).data(using: .utf8) ?? Data(), withName: "address")
+            formData.append((profile.chronicDiseases ?? "").data(using: .utf8) ?? Data(), withName: "chronicDiseases")
+            formData.append((profile.previousOperations ?? "").data(using: .utf8) ?? Data(), withName: "previousOperations")
+            formData.append((profile.allergies ?? "").data(using: .utf8) ?? Data(), withName: "allergies")
+            formData.append((profile.currentMedications ?? "").data(using: .utf8) ?? Data(), withName: "currentMedications")
+            formData.append((profile.comments ?? "").data(using: .utf8) ?? Data(), withName: "comments")
+            formData.append((profile.password).data(using: .utf8) ?? Data(), withName: "password")
+            formData.append((profile.ConfirmPassword).data(using: .utf8) ?? Data(), withName: "ConfirmPassword")
             
-            let headers: HTTPHeaders = [
-                "Authorization": "Bearer \(token)"
-            ]
             
-            AF.request(url, method: .get, headers: headers)
-                .validate()
-                .responseDecodable(of: Patient.self) { response in
-                    switch response.result {
-                    case .success(let patient):
-                        completion(.success(patient))
-                    case .failure(let error):
-                        completion(.failure(error))
-                    }
-                }
-        }
+            if let imageData = profile.image {
+                formData.append(imageData, withName: "image", fileName: "profile.jpg", mimeType: "image/jpeg")
+            }
 
+        }, to: url, method: .put, headers: headers)
+        .validate()
+        .response { response in
+            switch response.result {
+            case .success:
+                completion(.success(true))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    
+    func fetchPatient(byCode code: Int, token: String, completion: @escaping (Result<GetPatientByCode, Error>) -> Void) {
+        let url = "http://158.220.90.131:44500/api/Patients/GePatientByCode/\(code)"
+        
+        let headers: HTTPHeaders = [
+            "Authorization": "Bearer \(token)"
+        ]
+        
+        AF.request(url, method: .get, headers: headers)
+            .validate()
+            .responseDecodable(of: GetPatientByCode.self) { response in
+                // Capture the status code from the response
+                let statusCode = response.response?.statusCode
+                print("Status Code: \(statusCode ?? 0)")  // Prints the status code, defaulting to 0 if nil
+                
+                switch response.result {
+                case .success(let patient):
+                    completion(.success(patient))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+    }
 }
 class RoshetaService {
     static let shared = RoshetaService()
@@ -604,22 +644,22 @@ class PrescriptionService {
 
 class PatientBookingService {
     static let shared = PatientBookingService()
-
+    
     private init() {}
-
+    
     func getAllPatientsBooking(doctorId: String, completion: @escaping (Result<[PatientBooking], Error>) -> Void) {
         // Get the token from UserDefaults
         guard let token = KeychainHelper.shared.getToken(forKey: "DR_Token") else {
-                   completion(.failure(NSError(domain: "No Token Found", code: 401)))
-                   return
-               }
-
-
+            completion(.failure(NSError(domain: "No Token Found", code: 401)))
+            return
+        }
+        
+        
         // URL setup
         let urlString = "http://158.220.90.131:44500/api/PatientBooking/GetAllPatientsBookingToDoctorByDoctorId/\(doctorId)"
         print("Request URL: \(urlString)")
         print("Token: \(token)")
-
+        
         // Headers setup
         let headers: HTTPHeaders = [
             "Authorization": "Bearer \(token)",
@@ -629,16 +669,20 @@ class PatientBookingService {
         AF.request(urlString, method: .get, headers: headers)
             .validate()
             .responseDecodable(of: [PatientBooking].self) { response in
-                // 👇 Print the status code
-                      if let statusCode = response.response?.statusCode {
-                          print("Status code:", statusCode)
-                      }
+                if let statusCode = response.response?.statusCode {
+                    print("📡 Status code:", statusCode)
+                }
+                
                 switch response.result {
                 case .success(let bookings):
+                    print("📦 Response data: \(bookings)")
                     completion(.success(bookings))
                 case .failure(let error):
+                    print("🛑 Network error: \(error)")
+                    if let data = response.data,
+                       let responseBody = String(data: data, encoding: .utf8) {
+                        print("🔍 Server response body: \(responseBody)")
+                    }
                     completion(.failure(error))
                 }
-            }
-    }
-}
+            }}}

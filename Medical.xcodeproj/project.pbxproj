@@ -9,8 +9,14 @@
 /* Begin PBXBuildFile section */
 		1539880D051B8AA4909C70B1 /* Pods_Medical.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87272424127838C9880882A0 /* Pods_Medical.framework */; };
 		5667F4AC2DC765F700097EF1 /* DoctorDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5667F4AB2DC765F700097EF1 /* DoctorDetailsView.swift */; };
+		56893A982DCB73F6008B283D /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 56893A972DCB73F6008B283D /* SDWebImage */; };
+		56893A9A2DCB73F6008B283D /* SDWebImageMapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 56893A992DCB73F6008B283D /* SDWebImageMapKit */; };
+		56893A9D2DCB75C7008B283D /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 56893A9C2DCB75C7008B283D /* SDWebImageSwiftUI */; };
+		5696A7E12DCA061200AA4723 /* DoctorProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5696A7E02DCA061200AA4723 /* DoctorProfileView.swift */; };
+		5699664B2DC8D43000EFC471 /* PatientProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5699664A2DC8D43000EFC471 /* PatientProfileView.swift */; };
 		56B630E62DB3D279009F8784 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 56B630E52DB3D279009F8784 /* GoogleService-Info.plist */; };
 		56BE98B52DBE33B70010C535 /* GetDoctorReservations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56BE98B42DBE33B70010C535 /* GetDoctorReservations.swift */; };
+		56CCE0182DD09ECD000534ED /* PatientHomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56CCE0172DD09ECD000534ED /* PatientHomeView.swift */; };
 		CA018F912DA3D5B5008A6ADC /* DrHomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA018F902DA3D5B5008A6ADC /* DrHomeVC.swift */; };
 		CA0AC6872C9C59EE00618587 /* PatientProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0AC6862C9C59ED00618587 /* PatientProfileVC.swift */; };
 		CA0AC6892C9C5A0700618587 /* PatientProfileDataVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0AC6882C9C5A0700618587 /* PatientProfileDataVC.swift */; };
@@ -53,8 +59,11 @@
 
 /* Begin PBXFileReference section */
 		5667F4AB2DC765F700097EF1 /* DoctorDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorDetailsView.swift; sourceTree = "<group>"; };
+		5696A7E02DCA061200AA4723 /* DoctorProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoctorProfileView.swift; sourceTree = "<group>"; };
+		5699664A2DC8D43000EFC471 /* PatientProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientProfileView.swift; sourceTree = "<group>"; };
 		56B630E52DB3D279009F8784 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		56BE98B42DBE33B70010C535 /* GetDoctorReservations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDoctorReservations.swift; sourceTree = "<group>"; };
+		56CCE0172DD09ECD000534ED /* PatientHomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PatientHomeView.swift; sourceTree = "<group>"; };
 		87272424127838C9880882A0 /* Pods_Medical.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Medical.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		89196EC9A3FF30746F55BEC1 /* Pods-Medical.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Medical.debug.xcconfig"; path = "Target Support Files/Pods-Medical/Pods-Medical.debug.xcconfig"; sourceTree = "<group>"; };
 		CA018F902DA3D5B5008A6ADC /* DrHomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrHomeVC.swift; sourceTree = "<group>"; };
@@ -103,8 +112,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56893A9D2DCB75C7008B283D /* SDWebImageSwiftUI in Frameworks */,
 				CA81D2C12CAD6F33004B97A4 /* FirebaseAnalytics in Frameworks */,
+				56893A9A2DCB73F6008B283D /* SDWebImageMapKit in Frameworks */,
 				CA81D2C32CAD6F33004B97A4 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				56893A982DCB73F6008B283D /* SDWebImage in Frameworks */,
 				1539880D051B8AA4909C70B1 /* Pods_Medical.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -230,10 +242,13 @@
 		CA2E9D302DAD361E003885E1 /* swiftUiScreens */ = {
 			isa = PBXGroup;
 			children = (
+				56CCE0172DD09ECD000534ED /* PatientHomeView.swift */,
+				5696A7E02DCA061200AA4723 /* DoctorProfileView.swift */,
 				5667F4AB2DC765F700097EF1 /* DoctorDetailsView.swift */,
 				CA2E9D312DAD365E003885E1 /* RoshetaScreen.swift */,
 				CA3BECFB2DAFE9D100AA4680 /* RoshetaHistoryScreen.swift */,
 				56BE98B42DBE33B70010C535 /* GetDoctorReservations.swift */,
+				5699664A2DC8D43000EFC471 /* PatientProfileView.swift */,
 			);
 			path = swiftUiScreens;
 			sourceTree = "<group>";
@@ -319,6 +334,9 @@
 			packageProductDependencies = (
 				CA81D2C02CAD6F33004B97A4 /* FirebaseAnalytics */,
 				CA81D2C22CAD6F33004B97A4 /* FirebaseAnalyticsWithoutAdIdSupport */,
+				56893A972DCB73F6008B283D /* SDWebImage */,
+				56893A992DCB73F6008B283D /* SDWebImageMapKit */,
+				56893A9C2DCB75C7008B283D /* SDWebImageSwiftUI */,
 			);
 			productName = Medical;
 			productReference = CA0BC9672C9079EA00909BAA /* Medical.app */;
@@ -350,6 +368,8 @@
 			mainGroup = CA0BC95E2C9079EA00909BAA;
 			packageReferences = (
 				CA81D2BF2CAD6F33004B97A4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				56893A962DCB73F6008B283D /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				56893A9B2DCB75C7008B283D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = CA0BC9682C9079EA00909BAA /* Products */;
 			projectDirPath = "";
@@ -453,6 +473,8 @@
 				CA0BC96D2C9079EA00909BAA /* SceneDelegate.swift in Sources */,
 				CA7643082DA3E6F100578CE0 /* DrHomeViewHandler.swift in Sources */,
 				CA0BC9832C907B6B00909BAA /* RegisterVC.swift in Sources */,
+				5696A7E12DCA061200AA4723 /* DoctorProfileView.swift in Sources */,
+				5699664B2DC8D43000EFC471 /* PatientProfileView.swift in Sources */,
 				CA0AC6872C9C59EE00618587 /* PatientProfileVC.swift in Sources */,
 				CA3BECFC2DAFE9D100AA4680 /* RoshetaHistoryScreen.swift in Sources */,
 				CA0BC98D2C907ED000909BAA /* Utilities.swift in Sources */,
@@ -460,6 +482,7 @@
 				5667F4AC2DC765F700097EF1 /* DoctorDetailsView.swift in Sources */,
 				56BE98B52DBE33B70010C535 /* GetDoctorReservations.swift in Sources */,
 				CA0BC9892C907E2900909BAA /* ViewModel.swift in Sources */,
+				56CCE0182DD09ECD000534ED /* PatientHomeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,6 +706,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		56893A962DCB73F6008B283D /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.21.0;
+			};
+		};
+		56893A9B2DCB75C7008B283D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
 		CA81D2BF2CAD6F33004B97A4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -694,6 +733,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		56893A972DCB73F6008B283D /* SDWebImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 56893A962DCB73F6008B283D /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImage;
+		};
+		56893A992DCB73F6008B283D /* SDWebImageMapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 56893A962DCB73F6008B283D /* XCRemoteSwiftPackageReference "SDWebImage" */;
+			productName = SDWebImageMapKit;
+		};
+		56893A9C2DCB75C7008B283D /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 56893A9B2DCB75C7008B283D /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		CA81D2C02CAD6F33004B97A4 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CA81D2BF2CAD6F33004B97A4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

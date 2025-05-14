@@ -1,4 +1,5 @@
 import UIKit
+import SwiftUI
 
 class LoginVC: UIViewController {
 
@@ -11,9 +12,16 @@ class LoginVC: UIViewController {
     // ViewModel instances
     private let doctorViewModel = DoctorLoginViewModel()
     private let patientViewModel = PatientLoginViewModel()
-   
+    @IBOutlet weak var imageView: UIImageView!
+
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let isSmallDevice = UIScreen.main.bounds.height < 700
+        let imageHeightMultiplier: CGFloat = isSmallDevice ? 200.0/357.0 : 300.0/357.0
+        NSLayoutConstraint.activate([
+            imageView.heightAnchor.constraint(equalTo: imageView.widthAnchor, multiplier: imageHeightMultiplier)
+        ])
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
            view.addGestureRecognizer(tap)
@@ -116,24 +124,41 @@ class LoginVC: UIViewController {
                 UserDefaults.standard.set(doctorResponse.userName, forKey: "DR_Name")
                 
 
-            } else if let patientResponse = response as? PatientLoginResponse {
+             } else if let patientResponse = response as? PatientLoginResponse {
                 print("Patient login successful! Token: \(patientResponse.token)")
-                UserDefaults.standard.set(patientResponse.phone, forKey: "PT_email")
+                UserDefaults.standard.set(patientResponse.phone, forKey: "PT_Email")
                 KeychainHelper.shared.saveToken(token: patientResponse.token, forKey: "PT_Token")
                 UserDefaults.standard.set(patientResponse.id, forKey: "PT_ID")
-                print(patientResponse.id)
 
-                // Save patient email and password if "Remember Me" is enabled
+                // Save credentials if "Remember Me"
                 if switchBtnRememberme.isOn {
                     UserDefaults.standard.set(patientResponse.phone, forKey: "PT_Email")
-                    UserDefaults.standard.set(tfPassword.text, forKey: "PT_Password") // Save the password
+                    UserDefaults.standard.set(tfPassword.text, forKey: "PT_Password")
                 }
 
-                // Navigate to HomeVc
-                let homeVc = self.storyboard?.instantiateViewController(identifier: "homevc") as! HomeVC
-                homeVc.title = "Patient Home"
-                self.navigationController?.pushViewController(homeVc, animated: true)
-            }
+                     // Build the SwiftUI home view
+                     let homeView = PatientHomeView()
+
+                     // Wrap in a hosting controller
+                     let hostingController = UIHostingController(rootView: homeView)
+                     hostingController.modalPresentationStyle = .fullScreen
+
+                     // Replace the window’s rootViewController with no animation
+                     if let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                        let window = scene.windows.first {
+                         // Option A: Direct assignment
+                         window.rootViewController = hostingController
+                         window.makeKeyAndVisible()
+
+                         // Option B: Suppress any implicit animations
+                         /*
+                         UIView.performWithoutAnimation {
+                             window.rootViewController = hostingController
+                             window.makeKeyAndVisible()
+                         }
+                         */
+                     }
+                 }
         case .failure(let error):
             showAlert(message: "Login failed: \(error.localizedDescription)")
         }

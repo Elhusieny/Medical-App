@@ -120,7 +120,7 @@ class DoctorDetailsVC: UIViewController {
             return
         }
         
-        viewModel.bookAppointment(token: token, patientId: patientId) { success in
+        viewModel.bookAppointment(token: token, patientId: patientId,doctorId: doctorId ?? "") { success in
             DispatchQueue.main.async {
                 if success {
                     // Handle successful booking, e.g., show a success message or navigate to a confirmation screen

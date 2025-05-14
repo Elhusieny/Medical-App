@@ -1,5 +1,7 @@
 import Foundation
 import Combine
+import UIKit
+
 
 class DoctorViewModel {
     
@@ -8,8 +10,8 @@ class DoctorViewModel {
     var onRegisterFailure: ((Error?) -> Void)?
     
     // Call this method to register a doctor
-    func registerDoctor(with data: PostDoctorData) {
-        DataServiceDrRegister.shared.registerDoctor(doctorData: data) { [weak self] success, error in
+    func registerDoctor(with data: PostDoctorData, imageData: Data?) {
+        DataServiceDrRegister.shared.registerDoctor(doctorData: data,imageData: imageData) { [weak self] success, error in
             if success {
                 self?.onRegisterSuccess?()
                 
@@ -28,10 +30,10 @@ class DoctorLoginViewModel {
         }
     }
 }
-class GetAllDoctorsViewModel {
+class GetAllDoctorsViewModel:ObservableObject {
 
-        var doctors: [Doctors] = []
-        
+    @Published var doctors: [Doctors] = []
+
         func fetchDoctors(token: String, completion: @escaping (Bool) -> Void) {
             GetAllDoctorsDataServices.shared.fetchDoctors(token: token) { result in
                 switch result {
@@ -62,40 +64,54 @@ class GetAllPatientsViewModel{
 }
 
 
-class DoctorDataViewModel {
-    // Observable properties
-    var doctor: DoctorData?
-    var error: String?
-    var putProfile: UpdateDoctorProfileRequest?
+class DoctorDataViewModel: ObservableObject {
+    @Published var doctor: DoctorData?
+    @Published var error: String?
+    @Published var putProfile: UpdateDoctorProfileRequest?
+    @Published var selectedImage: UIImage?
 
-
-    func fetchDoctorData(token: String, completion: @escaping () -> Void) {
+    func fetchDoctorData(token: String, completion: @escaping (String?) -> Void) {
         GetDoctorDataService.shared.fetchDoctorData(token: token) { result in
-            switch result {
-            case .success(let doctorData):
-                // Update the data
-                self.doctor = doctorData
-                self.error = nil
-            case .failure(let fetchError):
-                // Handle the error
-                self.error = fetchError.localizedDescription
-                self.doctor = nil
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let doctorData):
+                    self.doctor = doctorData
+                    self.error = nil
+                    completion(nil) // no error
+                case .failure(let fetchError):
+                    self.error = fetchError.localizedDescription
+                    self.doctor = nil
+                    completion(fetchError.localizedDescription) // send error
+                }
             }
-            // Call completion handler to update the UI
-            completion()
         }
     }
+
 
     func updateDoctorProfile(token: String, completion: @escaping (String?) -> Void) {
-        guard let putProfile = putProfile else {
-            completion("No profile data to update")
+        guard var profileToUpdate = putProfile else {
+            completion("No profile data to update.")
             return
         }
-        
-        GetDoctorDataService.shared.updateDoctorProfile(token: token, updatedDoctor: putProfile, completion: completion)
-    }
 
+        // Convert selected UIImage to Data
+        if let image = selectedImage {
+            profileToUpdate.image = image.jpegData(compressionQuality: 0.8)
+        }
+
+        GetDoctorDataService.shared.updateDoctorProfile(token: token, updatedDoctor: profileToUpdate) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion("Failed to update profile: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
 }
+
 
 class PatientRegisterViewModel {
     
@@ -104,8 +120,8 @@ class PatientRegisterViewModel {
     var onRegisterFailure: ((Error?) -> Void)?
     
     // Call this method to register a patient
-    func registerPatient(with data: PostPatientData) {
-        PostPatientRegisterDataService.shared.registerPatient(patientData: data) { [weak self] success, error in
+    func registerPatient(with data: PostPatientData, imageData: Data?) {
+        PostPatientRegisterDataService.shared.registerPatient(patientData: data, imageData: imageData) { [weak self] success, error in
             if success {
                 self?.onRegisterSuccess?()
             } else {
@@ -114,6 +130,8 @@ class PatientRegisterViewModel {
         }
     }
 }
+
+
 class PatientLoginViewModel {
     
     // Function to handle login
@@ -270,118 +288,139 @@ class DrWorkingTimesViewModel {
         }
     }
 }
-    class BookingViewModel: ObservableObject {
-        @Published var availableTimes: [ResultInterval] = []
-        @Published var selectedDate: String?
-        @Published var selectedTime: ResultInterval?
-
-        func fetchDoctorTimes(token: String, doctorId: String, completion: @escaping () -> Void) {
-            DataServices.shared.fetchDoctorTimes(token: token, doctorId: doctorId) { [weak self] times, error in
-                DispatchQueue.main.async {
-                    if let times = times {
-                        self?.availableTimes = times
-                    } else {
-                        print("Error fetching doctor times: \(error?.localizedDescription ?? "")")
-                    }
-                    completion()
+class BookingViewModel: ObservableObject {
+    @Published var availableTimes: [ResultInterval] = []
+    @Published var selectedDate: String?
+    @Published var selectedTime: ResultInterval?
+    
+    func fetchDoctorTimes(token: String, doctorId: String, completion: @escaping () -> Void) {
+        DataServices.shared.fetchDoctorTimes(token: token, doctorId: doctorId) { [weak self] times, error in
+            DispatchQueue.main.async {
+                if let times = times {
+                    self?.availableTimes = times
+                } else {
+                    print("Error fetching doctor times: \(error?.localizedDescription ?? "")")
                 }
-            }
-        }
-
-        var availableDates: [String] {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-            
-            let isoFormatter = DateFormatter()
-            isoFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSS"
-
-            let dateStrings = availableTimes.compactMap { slot -> String? in
-                guard let date = isoFormatter.date(from: slot.intervalStart) else { return nil }
-                return dateFormatter.string(from: date)
-            }
-
-            return Array(Set(dateStrings)).sorted()
-        }
-
-
-        var filteredSlots: [ResultInterval] {
-            guard let selectedDate = selectedDate else { return [] }
-
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd"
-
-            let isoFormatter = DateFormatter()
-            isoFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSS"
-
-            return availableTimes.filter { slot in
-                if let date = isoFormatter.date(from: slot.intervalStart) {
-                    return dateFormatter.string(from: date) == selectedDate
-                }
-                return false
-            }
-        }
-
-
-        func bookAppointment(token: String, patientId: String, completion: @escaping (Bool) -> Void) {
-            guard let selectedTime = selectedTime else {
-                completion(false)
-                return
-            }
-
-            let bookDate = BookDate(patientId: patientId, doctorTimeIntervalId: selectedTime.id)
-            DataServices.shared.bookAppointment(token: token, bookDate: bookDate) { success, error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        print("Error booking appointment: \(error.localizedDescription)")
-                        completion(false)
-                    } else {
-                        completion(success)
-                    }
-                }
+                completion()
             }
         }
     }
-
-//handle logic between api and view
-class PatientProfileViewModel {
-    var profile: PatientProfile?
     
-    var putProfile:UpdatePatientProfileRequest?
-    func fetchProfile(id: String, token: String, completion: @escaping (String?) -> Void) {
-        DataServices.shared.getPatientProfile(id: id, token: token) { result in
-            switch result {
-            case .success(let data):
-                self.profile = data
-                completion(nil)
-            case .failure(let error):
-                completion("Failed to fetch profile: \(error.localizedDescription)")
+    var availableDates: [String] {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let isoFormatter = DateFormatter()
+        isoFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSS"
+        
+        let dateStrings = availableTimes.compactMap { slot -> String? in
+            guard let date = isoFormatter.date(from: slot.intervalStart) else { return nil }
+            return dateFormatter.string(from: date)
+        }
+        
+        return Array(Set(dateStrings)).sorted()
+    }
+    
+    
+    var filteredSlots: [ResultInterval] {
+        guard let selectedDate = selectedDate else { return [] }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        let isoFormatter = DateFormatter()
+        isoFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSSS"
+        
+        return availableTimes.filter { slot in
+            if let date = isoFormatter.date(from: slot.intervalStart) {
+                return dateFormatter.string(from: date) == selectedDate
+            }
+            return false
+        }
+    }
+    
+    
+    func bookAppointment(token: String, patientId: String, doctorId: String, completion: @escaping (Bool) -> Void) {
+        guard let selectedTime = selectedTime else {
+            completion(false)
+            return
+        }
+        
+        let raw = selectedTime.intervalStart            // "2025-05-13 12:10:39.0000000"
+        let iso = raw
+          .replacingOccurrences(of: " ", with: "T")      // "2025-05-13T12:10:39.0000000"
+          + "Z"                                         // "2025-05-13T12:10:39.0000000Z"
+
+        let bookDate = BookDate(
+          doctorId: doctorId,
+          doctorTimeIntervalId: selectedTime.id,
+          intervalStart: iso,
+          patientId: patientId
+        )
+        
+        DataServices.shared.bookAppointment(token: token, bookDate: bookDate) { success, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("❌ Error booking appointment: \(error.localizedDescription)")
+                    completion(false)
+                } else {
+                    print("✅ Appointment booked successfully")
+                    completion(success)
+                }
             }
         }
     }
 }
-import Alamofire
 
-extension PatientProfileViewModel {
-    func updateProfile(token: String, completion: @escaping (String?) -> Void) {
-        guard let updatedProfile = putProfile else {
+
+//handle logic between api and view
+class PatientProfileViewModel: ObservableObject {
+    @Published var profile: GetPatientProfileData?
+    @Published var putProfile: UpdatePatientProfileRequest?
+    @Published var selectedImage: UIImage?
+
+    // Fetch patient profile data
+    func fetchProfile(id: String, token: String, completion: @escaping (String?) -> Void) {
+        DataServices.shared.getPatientProfile(id: id, token: token) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let data):
+                    self.profile = data
+                    completion(nil)
+                case .failure(let error):
+                    completion("Failed to fetch profile: \(error.localizedDescription)")
+                }
+            }
+        }
+    }
+
+    func updateProfileWithImage(token: String, completion: @escaping (String?) -> Void) {
+        guard var profileToUpdate = putProfile else {
             completion("No profile data to update.")
             return
         }
 
-        // Make the update request through DataServices
-        DataServices.shared.updatePatientProfile(id: updatedProfile.id, updatedProfile: updatedProfile, token: token) { result in
-            switch result {
-            case .success:
-                completion(nil) // Success
-            case .failure(let error):
-                completion("Failed to update profile: \(error.localizedDescription)")
+        // Convert UIImage to Data before assigning
+        if let image = selectedImage {
+            profileToUpdate.image = image.jpegData(compressionQuality: 0.8)
+        }
+
+        DataServices.shared.updatePatientProfileWithImage(profileToUpdate, token: token) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success:
+                    completion(nil)
+                case .failure(let error):
+                    completion("Failed to update profile: \(error.localizedDescription)")
+                }
             }
         }
     }
 }
+
 //get patient by code
 class PatientViewModel: ObservableObject {
-    @Published var patient: Patient?
+    @Published var patient: GetPatientByCode?
     @Published var errorMessage: String?
     
     func getPatient(byCode code: Int, token: String) {
@@ -467,15 +506,19 @@ class PatientBookingViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     func fetchPatientBookings(for doctorId: String) {
+        print("📥 Fetching bookings for doctorId: \(doctorId)")
         PatientBookingService.shared.getAllPatientsBooking(doctorId: doctorId) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let bookings):
+                    print("✅ Bookings received: \(bookings.count)")
                     self?.patientBookings = bookings
                 case .failure(let error):
+                    print("❌ Error received: \(error.localizedDescription)")
                     self?.errorMessage = error.localizedDescription
                 }
             }
         }
     }
+
 }

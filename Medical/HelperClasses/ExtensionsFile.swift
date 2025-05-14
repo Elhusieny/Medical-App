@@ -10,3 +10,8 @@ extension UIImage {
         }
     }
 }
+extension UIColor {
+    static var darkRed: UIColor {
+        return UIColor(red: 139/255, green: 0, blue: 0, alpha: 1) // Dark Red RGB
+    }
+}

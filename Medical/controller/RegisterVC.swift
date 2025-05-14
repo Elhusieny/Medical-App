@@ -2,7 +2,8 @@ import UIKit
 import Alamofire
 
 class RegisterVC: UIViewController {
-
+    @IBOutlet weak var imageView: UIImageView! // A UIImageView to display the selected image
+    var selectedImage: UIImage? // To store the selected image
     @IBOutlet weak var tfSpecializationOrID: UITextField!
     @IBOutlet weak var tfName: UITextField!
     @IBOutlet weak var tfPassword: UITextField!
@@ -20,6 +21,10 @@ class RegisterVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+           view.addGestureRecognizer(tap)
+        
 
         // Set the initial placeholder text based on the default selected segment
         updateSpecializationOrIDPlaceholder()
@@ -59,8 +64,14 @@ class RegisterVC: UIViewController {
         helperFunctions.setIconButton(for: btnRegister, withImage: UIImage(named: "login"), title: "Sign Up")
 
     }
+    @IBAction func selectImageTapped(_ sender: UIButton) {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        imagePickerController.sourceType = .photoLibrary
+        self.present(imagePickerController, animated: true, completion: nil)
+    }
 
-    // Action for the Register button
     @IBAction func btnRegister(_ sender: UIButton) {
         if validateFields() {
             //activityIndicator.startAnimating()
@@ -74,12 +85,23 @@ class RegisterVC: UIViewController {
                     address: tfAddress.text!,
                     phone: tfPhone.text!,
                     password: tfPassword.text!,
-                    confirmPassword: tfConfirmPassword.text!
+                    confirmPassword: tfConfirmPassword.text!,
+                    image: selectedImage // Pass the selected image directly
                 )
-                doctorViewModel.registerDoctor(with: doctorData)
+                // Handle image data before passing to the ViewModel
+                if let image = doctorData.image {
+                    // Convert UIImage to Data
+                    if let imageData = image.jpegData(compressionQuality: 0.8) {
+                        // Pass the image data to the ViewModel
+                        doctorViewModel.registerDoctor(with: doctorData,imageData: imageData)
+                    }
+                } else {
+                    // If no image is selected, proceed without it
+                    doctorViewModel.registerDoctor(with: doctorData, imageData: nil)
+                }
             } else {
                 // Patient Registration
-                let patientData = PostPatientData(
+                var patientData = PostPatientData(
                     userName: tfName.text!,
                     nationalID: tfSpecializationOrID.text!,
                     email: tfEmail.text!,
@@ -91,12 +113,25 @@ class RegisterVC: UIViewController {
                     currentMedications: "",
                     comments: "",
                     password: tfPassword.text!,
-                    confirmPassword: tfConfirmPassword.text!
+                    confirmPassword: tfConfirmPassword.text!,
+                    image: selectedImage // Pass the selected image directly
                 )
-                patientViewModel.registerPatient(with: patientData)
+                
+                // Handle image data before passing to the ViewModel
+                if let image = patientData.image {
+                    // Convert UIImage to Data
+                    if let imageData = image.jpegData(compressionQuality: 0.8) {
+                        // Pass the image data to the ViewModel
+                        patientViewModel.registerPatient(with: patientData, imageData: imageData)
+                    }
+                } else {
+                    // If no image is selected, proceed without it
+                    patientViewModel.registerPatient(with: patientData, imageData: nil)
+                }
             }
         }
     }
+
 
     // Navigate to the Login screen
     func navigateToLogin() {
@@ -160,5 +195,21 @@ class RegisterVC: UIViewController {
             // Patient selected
             tfSpecializationOrID.placeholder = "Enter National ID"
         }
+    }
+}
+extension RegisterVC: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let pickedImage = info[.editedImage] as? UIImage {
+            selectedImage = pickedImage
+            imageView.image = pickedImage // Optionally display the image in the imageView
+        }
+        picker.dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
+    }
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
     }
 }

@@ -1,10 +1,11 @@
 
 import Foundation
+import UIKit
 
 // Define a struct that matches the JSON structure
 //This model represents the doctor data that you want to register.
 //Features: Conforms to Codable for easy encoding and decoding.
-struct  PostDoctorData: Codable {
+struct  PostDoctorData {
     var userName: String
     var specialization: String
     var email: String
@@ -12,12 +13,16 @@ struct  PostDoctorData: Codable {
     var phone: String
     var password: String
     var confirmPassword: String
+    var image:UIImage?
 }
 // get Doctor Data
 struct DoctorData: Codable {
     let id, userName, specialization, email: String
     let phoneNumber, address, password: String
     let medicineDescriptions, doctorWorkingTime, doctorWorkingDaysOfWeek: String?
+    var imagePath: String?  // ✅ Use this to store image URL or filename from backend
+
+    
 }
 
 struct DoctorLoginData:Codable
@@ -33,7 +38,7 @@ struct DoctorLoginResponse: Codable {
     let userName:String
 }
 
-struct UpdateDoctorProfileRequest: Codable {
+struct UpdateDoctorProfileRequest {
     var id: String
     var userName: String
     var specialization: String
@@ -45,14 +50,16 @@ struct UpdateDoctorProfileRequest: Codable {
     var medicineDescriptions: String?  // Optional
     var doctorWorkingTime: String?     // Optional
     var doctorWorkingDaysOfWeek: String?  // Optional
+    var image:Data?
 }
 
 
 //get all doctors
-struct Doctors:Codable
+struct Doctors: Identifiable, Decodable
 {
-        let id, userName, specialization, email: String
-        let phoneNumber, address, password: String
+        let id, userName, specialization, email: String?
+        let phoneNumber, address, password: String?
+        let imagePath: String? // ✅ Use this to store Doctors images URL
         let medicineDescriptions, doctorWorkingTime, doctorWorkingDaysOfWeek: String?
 
 }
@@ -72,6 +79,8 @@ struct PostPatientData{
         let  chronicDiseases, previousOperations, allergies: String?
         let currentMedications, comments:String?
         let password, confirmPassword: String
+       var image: UIImage? // 👈 Change this from URL? to UIImage?
+
 }
 //Patient Login
 struct PatientLoginData: Codable {
@@ -181,12 +190,13 @@ struct ResultInterval: Codable {
     let intervalEnd: String
 }
 struct BookDate: Codable {
-    let patientId: String
+    let doctorId: String
     let doctorTimeIntervalId: Int
+    let intervalStart: String
+    let patientId: String
 }
 
-
-struct PatientProfile: Codable {
+struct GetPatientProfileData: Codable {
     var id: String
     var nationalID: String
     var patientCode: Int
@@ -200,9 +210,10 @@ struct PatientProfile: Codable {
     var currentMedications: String?
     var comments: String?
     var password: String?  // Add password as an optional field
+    var imagePath: String?  // ✅ Use this to store image URL or filename from backend
 }
 
-struct UpdatePatientProfileRequest: Codable {
+struct UpdatePatientProfileRequest {
     var id: String
     var nationalID: String
     var patientCode: Int
@@ -217,22 +228,31 @@ struct UpdatePatientProfileRequest: Codable {
     var comments: String?
     var password: String
     var ConfirmPassword: String
+
+    var image: Data? // Store image data directly here
 }
+
 //-Mark: get patient data by patient code
-struct Patient: Codable {
+struct GetPatientByCode: Codable {
     let id: String
     let nationalID: String
     let patientCode: Int
     let userName: String
     let email: String
     let phone: String
-    let address: String
-    let chronicDiseases: String
-    let previousOperations: String
-    let allergies: String
-    let currentMedications: String
-    let comments: String
+    let address: String?
+    let chronicDiseases: String?
+    let previousOperations: String?
+    let allergies: String?
+    let currentMedications: String?
+    let comments: String?
+    let imagePath: String
+    let medicineDescriptions: String?
+    let patientBooking: String?
+    let patientsInfoForm: String?
+    let children: String?
 }
+
 
 //-mark: doctor post rosheta to patient
 struct RoshetaRequest: Codable {
